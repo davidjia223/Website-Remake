@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Your Website Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Jia | Cyberpunk Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Website</h1>
-        <p>Your subtitle or tagline goes here</p>
+    <header class="cyber-header">
+        <h1 class="glitch" data-text="DAVID_JIA">DAVID_JIA</h1>
+        <p class="cyber-tagline">// Full-Stack Developer && Cyber Enthusiast</p>
     </header>
-    <nav>
-        <p>
-            <a href="#home">Home</a> | 
-            <a href="#projects">Services</a> | 
-            <a href="#quotes">Services</a> | 
-            <a href="#contact">Contact</a>
-        </p>
+    
+    <nav class="cyber-nav">
+        <ul>
+            <li><a href="#bio" class="neon-link">>_Bio</a></li>
+            <li><a href="#work" class="neon-link">>_Work</a></li>
+            <li><a href="#tech" class="neon-link">>_Tech</a></li>
+            <li><a href="#contact" class="neon-link">>_Contact</a></li>
+        </ul>
     </nav>
+
     <main>
-        <section id="home">
-            <h2>Home</h2>
-            <p>Welcome to the homepage. Here’s where you introduce your website to visitors.</p>
+        <section id="home" class="hero">
+            <h2>Innovative Digital Solutions</h2>
+            <p>We specialize in creating bespoke web experiences that drive business growth.</p>
         </section>
+
         <section id="services">
-            <h2>Services</h2>
-            <p>Describe the services you offer here.</p>
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <article class="service-card">
+                    <h3>Web Development</h3>
+                    <p>Full-stack development using modern technologies</p>
+                </article>
+                <article class="service-card">
+                    <h3>UI/UX Design</h3>
+                    <p>User-centered interface design and prototyping</p>
+                </article>
+            </div>
         </section>
-        <section id="quotes"></section>
-            <h2>Quotes</h2>
-            <p>Describe the quotes you like here</p>
+
+        <section id="quotes">
+            <h2>Client Success Stories</h2>
+            <blockquote>
+                <p>"Increased our conversion rate by 200% through optimized UX design"</p>
+                <cite>- Tech Startup CEO</cite>
+            </blockquote>
         </section>
+
         <section id="contact">
-            <h2>Contact</h2>
-            <p>Include your contact details here or a contact form.</p>
+            <h2>Get in Touch</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Name" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Message" rows="5"></textarea>
+                <button type="submit">Send Message</button>
+            </form>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2024 Your Website Name. All rights reserved.</p>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year"></span> Creative Solutions Hub. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
