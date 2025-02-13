@@ -251,17 +251,54 @@ body {
 .social-link {
     color: var(--terminal-green);
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1.5rem;
     border: 1px solid var(--neon-cyan);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%);
 }
 
 .social-link:hover {
-    background: rgba(0, 255, 255, 0.1);
-    box-shadow: 0 0 15px var(--neon-cyan);
-    transform: translateY(-2px);
+    background: rgba(0, 255, 255, 0.15);
+    box-shadow: 0 0 25px var(--neon-cyan),
+                inset 0 0 10px rgba(0, 255, 255, 0.2);
+    transform: translateY(-3px) rotateX(15deg);
+    animation: linkGlitch 0.4s infinite alternate;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+        var(--neon-cyan) 0%,
+        var(--neon-pink) 50%,
+        var(--terminal-green) 100%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.social-link:hover::before {
+    opacity: 0.3;
+}
+
+@keyframes linkGlitch {
+    0% {
+        clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
+    }
+    100% {
+        clip-path: polygon(0 15%, 100% 25%, 100% 15%, 0 25%);
+        filter: hue-rotate(10deg);
+    }
 }
 
 .contact-form {
