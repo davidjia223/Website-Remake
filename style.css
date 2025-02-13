@@ -306,27 +306,95 @@ body {
 
 .quotes-track {
     display: flex;
-    gap: 2rem;
+    gap: 3rem; /* Increased gap for better spacing */
     padding: 2rem 0;
-    animation: slideTrack 30s linear infinite;
+    animation: slideTrack 90s linear infinite; /* Further slowed down for better visibility */
     width: max-content;
 }
 
 .quote-container {
-    flex: 0 0 400px;
-    animation: slideLeft 5s linear infinite;
+    flex: 0 0 600px; /* Increased from 400px to accommodate longer quotes */
+    animation: slideLeft 15s linear infinite;
     transform-origin: center;
+    position: relative;
+    margin: 0 2rem; /* Added horizontal margin for better spacing */
+}
+
+.cyber-quote p {
+    font-size: 1.2rem; /* Slightly reduced from 1.4rem for better fit */
+    line-height: 1.6; /* Added for better readability of longer quotes */
+    padding: 0.5rem; /* Added padding for text breathing room */
+}
+
+.quote-container::before,
+.quote-container::after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    right: -20px;
+    top: -20px;
+    bottom: -20px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.quote-container::before {
+    background: radial-gradient(circle at center, var(--neon-cyan) 0%, transparent 70%);
+    z-index: 1;
+}
+
+.quote-container::after {
+    background: radial-gradient(circle at center, var(--neon-pink) 0%, transparent 100%);
+    z-index: 0;
+}
+
+.quote-container.quote-death::before {
+    opacity: 0.7;
+    animation: impact-glow 0.8s ease-out;
+}
+
+.quote-container.quote-death::after {
+    opacity: 0.5;
+    animation: shockwave 0.6s ease-out;
+}
+
+@keyframes impact-glow {
+    0% { opacity: 0; transform: scale(0.8); }
+    40% { opacity: 0.9; transform: scale(1.3); }
+    70% { opacity: 0.7; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+@keyframes shockwave {
+    0% {
+        opacity: 0.8;
+        transform: scale(0.1);
+        border-radius: 50%;
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(2);
+        border-radius: 45%;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(3);
+        border-radius: 40%;
+    }
 }
 
 .cyber-quote {
     background: var(--cyber-dark);
     border: 2px solid var(--neon-cyan);
-    padding: 2rem;
+    padding: 2.5rem;
     margin: 0;
     position: relative;
-    text-align: center;
+    text-align: left;
     transform: skew(-5deg);
     transition: all 0.3s ease;
+    max-width: 550px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
 }
 
 .cyber-quote::before {
@@ -344,21 +412,25 @@ body {
 }
 
 .cyber-quote p {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--terminal-green);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     text-shadow: 0 0 10px var(--terminal-green);
     transform: skew(5deg);
+    line-height: 1.8;
+    letter-spacing: 0.5px;
 }
 
 .cyber-quote cite {
     color: var(--neon-pink);
-    font-style: normal;
+    font-style: italic;
     font-size: 1rem;
     display: block;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     text-shadow: 0 0 8px var(--neon-pink);
     transform: skew(5deg);
+    text-align: right;
+    padding-right: 1.5rem;
 }
 
 .quote-death {
@@ -383,35 +455,68 @@ body {
         opacity: 1;
         transform: translateX(0) skew(-5deg);
     }
+    85% {
+        opacity: 1;
+        transform: translateX(-90%) skew(-5deg);
+    }
     90% {
         opacity: 1;
-        transform: translateX(-100%) skew(-5deg);
+        transform: translateX(-95%) skew(-5deg) rotate(0deg);
+        filter: brightness(1.2);
+    }
+    93% {
+        opacity: 1;
+        transform: translateX(-97%) skew(-10deg) rotate(-5deg) scale(0.98);
+        filter: brightness(1.5);
+        box-shadow: 0 0 20px var(--neon-cyan);
+    }
+    96% {
+        opacity: 0.9;
+        transform: translateX(-98%) skew(-15deg) rotate(-10deg) scale(0.95);
+        filter: brightness(2);
+        box-shadow: 0 0 40px var(--neon-pink);
+    }
+    98% {
+        opacity: 0.8;
+        transform: translateX(-99%) skew(-20deg) rotate(-15deg) scale(0.9);
+        filter: brightness(2.5);
+        box-shadow: 0 0 60px var(--terminal-green);
     }
     100% {
         opacity: 0;
-        transform: translateX(-120%) skew(-5deg);
+        transform: translateX(-100%) skew(-25deg) rotate(-20deg) scale(0.8);
+        filter: brightness(3);
+        box-shadow: 0 0 80px var(--neon-cyan);
     }
 }
 
 @keyframes quoteDeath {
     0% {
-        transform: skew(-5deg) scale(1);
+        transform: translateX(-98%) skew(-5deg) scale(1);
         filter: brightness(1);
     }
     20% {
-        transform: skew(-15deg) scale(0.9);
+        transform: translateX(-99%) skew(-15deg) scale(0.95) rotate(-5deg);
         filter: brightness(2);
+        box-shadow: 0 0 20px var(--neon-cyan);
     }
     40% {
-        transform: skew(15deg) scale(0.8);
+        transform: translateX(-99.5%) skew(15deg) scale(0.9) rotate(10deg);
         filter: brightness(3);
+        box-shadow: 0 0 40px var(--neon-pink);
     }
     60% {
-        transform: skew(-10deg) scale(0.7);
-        box-shadow: 0 0 40px var(--neon-cyan);
+        transform: translateX(-100%) skew(-20deg) scale(0.8) rotate(-15deg);
+        box-shadow: 0 0 60px var(--neon-cyan);
+        filter: contrast(2) brightness(2);
+    }
+    80% {
+        transform: translateX(-100%) skew(25deg) scale(0.6) rotate(20deg);
+        box-shadow: 0 0 80px var(--terminal-green);
+        filter: contrast(3) brightness(3);
     }
     100% {
-        transform: skew(20deg) scale(0);
+        transform: translateX(-100%) skew(-30deg) scale(0) rotate(-25deg);
         filter: brightness(0);
         box-shadow: 0 0 0 var(--neon-cyan);
     }

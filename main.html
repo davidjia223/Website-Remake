@@ -47,32 +47,32 @@
             <div class="quotes-track">
                 <div class="quote-container">
                     <blockquote class="cyber-quote">
-                        <p>"The only way to do great work is to love what you do."</p>
-                        <cite>- Steve Jobs</cite>
+                        <p>"True invention requires lateral thinking, not just incremental improvement. When great minds collaborate, innovation flourishes exponentially."</p>
+                        <cite>- Jeff Bezos on Lex Fridman Podcast</cite>
                     </blockquote>
                 </div>
                 <div class="quote-container">
                     <blockquote class="cyber-quote">
-                        <p>"Innovation distinguishes between a leader and a follower."</p>
-                        <cite>- Steve Jobs</cite>
+                        <p>"If humanity can overcome the climate challenge, our reward is nothing less than the solar system itself."</p>
+                        <cite>- Adam Frank</cite>
                     </blockquote>
                 </div>
                 <div class="quote-container">
                     <blockquote class="cyber-quote">
-                        <p>"Stay hungry, stay foolish."</p>
-                        <cite>- Steve Jobs</cite>
+                        <p>"Trading teaches life's essential lessons: discipline over emotion, long-term vision over immediate gratification, and the value of consistent dedication."</p>
+                        <cite>- Market Wisdom</cite>
                     </blockquote>
                 </div>
                 <div class="quote-container">
                     <blockquote class="cyber-quote">
-                        <p>"The future belongs to those who believe in the beauty of their dreams."</p>
-                        <cite>- Eleanor Roosevelt</cite>
+                        <p>"True growth comes from competing with yourself, not others. Your only meaningful comparison is with who you were yesterday."</p>
+                        <cite>- Personal Development Principle</cite>
                     </blockquote>
                 </div>
                 <div class="quote-container">
                     <blockquote class="cyber-quote">
-                        <p>"Code is poetry in motion."</p>
-                        <cite>- Anonymous</cite>
+                        <p>"History never repeats itself, but man always does."</p>
+                        <cite>- Voltaire</cite>
                     </blockquote>
                 </div>
             </div>
@@ -88,17 +88,61 @@
                         track.appendChild(clone);
                     });
 
-                    // Handle quote removal animation
+                    // Handle quote crash and removal animation
                     track.addEventListener('animationend', (e) => {
                         if (e.animationName === 'slideLeft') {
                             const quote = e.target;
+                            // Add crash effect
+                            quote.style.transition = 'all 0.3s ease';
                             quote.classList.add('quote-death');
+                            
+                            // Add enhanced screen shake and flash effects
+                            document.body.style.animation = 'shake 0.8s cubic-bezier(.36,.07,.19,.97) both';
+                            quote.style.animation = 'flash 0.5s ease-in-out';
+                            
+                            // Add impact flash to nearby quotes
+                            const nearbyQuotes = Array.from(track.children)
+                                .filter(q => q !== quote && Math.abs(q.offsetLeft - quote.offsetLeft) < 600);
+                            nearbyQuotes.forEach(q => {
+                                q.style.animation = 'flash 0.3s ease-out';
+                                setTimeout(() => q.style.animation = '', 300);
+                            });
+
+                            // Reset shake effect
+                            setTimeout(() => {
+                                document.body.style.animation = '';
+                            }, 800);
+                            
+                            // Reset quote after animation with longer duration
                             setTimeout(() => {
                                 quote.classList.remove('quote-death');
+                                quote.style.transition = '';
+                                quote.style.animation = '';
                                 track.appendChild(quote);
-                            }, 1000);
+                            }, 2500); // Increased duration for more dramatic effect
                         }
                     });
+
+                    // Add enhanced shake and flash animation styles
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes shake {
+                            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                            15% { transform: translate(-8px, 2px) rotate(-1deg); }
+                            30% { transform: translate(6px, -2px) rotate(1deg); }
+                            45% { transform: translate(-6px, 1px) rotate(-0.5deg); }
+                            60% { transform: translate(4px, -1px) rotate(0.5deg); }
+                            75% { transform: translate(-3px, 1px) rotate(-0.25deg); }
+                            90% { transform: translate(2px, 0) rotate(0.1deg); }
+                        }
+                        @keyframes flash {
+                            0%, 100% { filter: brightness(1); }
+                            25% { filter: brightness(1.5); }
+                            50% { filter: brightness(2); }
+                            75% { filter: brightness(1.5); }
+                        }
+                    `;
+                    document.head.appendChild(style);
                 });
             </script>
         </section>
