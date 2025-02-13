@@ -44,26 +44,63 @@
 
         <section id="quotes" class="quotes-section">
             <h2 class="glitch" data-text="Quotes that stuck with me">Quotes that stuck with me</h2>
-            <div class="quotes-slider">
-                <div class="quote-slide">
+            <div class="quotes-track">
+                <div class="quote-container">
                     <blockquote class="cyber-quote">
                         <p>"The only way to do great work is to love what you do."</p>
                         <cite>- Steve Jobs</cite>
                     </blockquote>
                 </div>
-                <div class="quote-slide">
+                <div class="quote-container">
                     <blockquote class="cyber-quote">
                         <p>"Innovation distinguishes between a leader and a follower."</p>
                         <cite>- Steve Jobs</cite>
                     </blockquote>
                 </div>
-                <div class="quote-slide">
+                <div class="quote-container">
                     <blockquote class="cyber-quote">
                         <p>"Stay hungry, stay foolish."</p>
                         <cite>- Steve Jobs</cite>
                     </blockquote>
                 </div>
+                <div class="quote-container">
+                    <blockquote class="cyber-quote">
+                        <p>"The future belongs to those who believe in the beauty of their dreams."</p>
+                        <cite>- Eleanor Roosevelt</cite>
+                    </blockquote>
+                </div>
+                <div class="quote-container">
+                    <blockquote class="cyber-quote">
+                        <p>"Code is poetry in motion."</p>
+                        <cite>- Anonymous</cite>
+                    </blockquote>
+                </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const track = document.querySelector('.quotes-track');
+                    const quotes = document.querySelectorAll('.quote-container');
+                    
+                    // Clone quotes for infinite scroll
+                    quotes.forEach(quote => {
+                        const clone = quote.cloneNode(true);
+                        track.appendChild(clone);
+                    });
+
+                    // Handle quote removal animation
+                    track.addEventListener('animationend', (e) => {
+                        if (e.animationName === 'slideLeft') {
+                            const quote = e.target;
+                            quote.classList.add('quote-death');
+                            setTimeout(() => {
+                                quote.classList.remove('quote-death');
+                                track.appendChild(quote);
+                            }, 1000);
+                        }
+                    });
+                });
+            </script>
         </section>
 
         <script>
