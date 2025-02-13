@@ -17,7 +17,7 @@
         <ul>
             <li><a href="#bio" class="neon-link">>_Bio</a></li>
             <li><a href="#work" class="neon-link">>_Work</a></li>
-            <li><a href="#tech" class="neon-link">>_Tech</a></li>
+            <li><a href="#quotes" class="neon-link">>_Quotes</a></li>
             <li><a href="#contact" class="neon-link">>_Contact</a></li>
         </ul>
     </nav>
@@ -42,13 +42,50 @@
             </div>
         </section>
 
-        <section id="quotes">
-            <h2>Client Success Stories</h2>
-            <blockquote>
-                <p>"Increased our conversion rate by 200% through optimized UX design"</p>
-                <cite>- Tech Startup CEO</cite>
-            </blockquote>
+        <section id="quotes" class="quotes-section">
+            <h2 class="glitch" data-text="Quotes that stuck with me">Quotes that stuck with me</h2>
+            <div class="quotes-slider">
+                <div class="quote-slide">
+                    <blockquote class="cyber-quote">
+                        <p>"The only way to do great work is to love what you do."</p>
+                        <cite>- Steve Jobs</cite>
+                    </blockquote>
+                </div>
+                <div class="quote-slide">
+                    <blockquote class="cyber-quote">
+                        <p>"Innovation distinguishes between a leader and a follower."</p>
+                        <cite>- Steve Jobs</cite>
+                    </blockquote>
+                </div>
+                <div class="quote-slide">
+                    <blockquote class="cyber-quote">
+                        <p>"Stay hungry, stay foolish."</p>
+                        <cite>- Steve Jobs</cite>
+                    </blockquote>
+                </div>
+            </div>
         </section>
+
+        <script>
+            // Auto-sliding quotes
+            const quotesSlider = document.querySelector('.quotes-slider');
+            const slides = document.querySelectorAll('.quote-slide');
+            let currentSlide = 0;
+
+            function nextSlide() {
+                slides[currentSlide].style.opacity = '0';
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].style.opacity = '1';
+            }
+
+            // Initialize first slide
+            slides.forEach((slide, index) => {
+                slide.style.opacity = index === 0 ? '1' : '0';
+            });
+
+            // Auto-slide every 5 seconds
+            setInterval(nextSlide, 5000);
+        </script>
 
         <section id="contact">
             <h2>Get in Touch</h2>
