@@ -210,11 +210,11 @@ body {
 
 .contact-container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
-    max-width: 1200px;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .contact-info {
@@ -267,9 +267,9 @@ body {
 .contact-form {
     display: grid;
     gap: 2.5rem;
-    padding: 3.5rem;
+    padding: 2.5rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
     border-radius: 4px;
     position: relative;
     box-shadow:
