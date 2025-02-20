@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="scroll-progress"></div>
+    
     <header class="cyber-header">
         <h1 class="glitch" data-text="DAVID_JIA">DAVID_JIA</h1>
         <p class="cyber-tagline">// Full-Stack Developer && Cyber Enthusiast</p>
@@ -260,5 +262,81 @@
                 }
             });
         </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.neon-link');
+            const progressBar = document.querySelector('.scroll-progress');
+            
+            // Handle smooth scrolling
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Add transition class to target section
+                    targetSection.classList.add('section-transition');
+                    
+                    // Smooth scroll to section
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Remove transition class after animation
+                    setTimeout(() => {
+                        targetSection.classList.remove('section-transition');
+                    }, 500);
+                });
+            });
+            
+            // Update active section on scroll
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const scrollPos = window.pageYOffset;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollPos >= sectionTop - sectionHeight / 3) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                // Update active nav link
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Update progress bar
+                const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                progressBar.style.transform = `scaleX(${scrolled / 100})`;
+            });
+            
+            // Add glitch effect on hover
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.animation = 'glitch-hover 0.3s infinite';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.animation = '';
+                });
+            });
+            
+            // Initial check for active section
+            setTimeout(() => {
+                window.dispatchEvent(new Event('scroll'));
+            }, 100);
+        });
+    </script>
 </body>
 </html>
