@@ -282,9 +282,11 @@ body {
 .neon-input:focus {
     outline: none;
     border-color: var(--neon-pink);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(255, 0, 255, 0.1);
     background: rgba(0, 0, 0, 0.8);
-    animation: input-glow 2s infinite;
+    animation: inputPulse 2s infinite;
 }
 
 .form-group {
@@ -299,7 +301,7 @@ body {
     left: -20px;
     color: var(--neon-cyan);
     font-size: 1.2rem;
-    animation: cursor-blink 1s infinite;
+    animation: cursorGlitch 1s steps(2) infinite;
 }
 
 .form-group.input-active .neon-input {
@@ -307,7 +309,7 @@ body {
     border-color: var(--neon-pink);
     box-shadow:
         0 0 20px rgba(0, 255, 255, 0.2),
-        inset 0 0 10px rgba(0, 255, 255, 0.1);
+        inset 0 0 10px rgba(255, 0, 255, 0.1);
 }
 
 .form-group::after {
@@ -320,9 +322,10 @@ body {
     background: linear-gradient(90deg,
         transparent,
         var(--neon-cyan) 50%,
+        var(--neon-pink) 75%,
         transparent 100%
     );
-    animation: form-scan 3s linear infinite;
+    animation: scanline 3s linear infinite;
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -331,25 +334,56 @@ body {
     opacity: 1;
 }
 
-@keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+@keyframes cursorGlitch {
+    0%, 100% { 
+        transform: none;
+        text-shadow: none;
+    }
+    92% { 
+        transform: translate(-2px, 1px);
+        text-shadow: -2px 0 var(--neon-pink);
+    }
+    94% { 
+        transform: translate(2px, -1px);
+        text-shadow: 2px 0 var(--neon-cyan);
+    }
+    96% { 
+        transform: translate(-1px, -1px);
+        text-shadow: 1px 0 var(--neon-yellow);
+    }
+    98% { 
+        transform: translate(1px, 1px);
+        text-shadow: -1px 0 var(--terminal-green);
+    }
 }
 
-@keyframes input-glow {
+@keyframes inputPulse {
     0%, 100% {
         border-color: var(--neon-cyan);
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        box-shadow: 
+            0 0 20px rgba(0, 255, 255, 0.2),
+            inset 0 0 10px rgba(0, 255, 255, 0.1);
     }
     50% {
         border-color: var(--neon-pink);
-        box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+        box-shadow: 
+            0 0 30px rgba(255, 0, 255, 0.3),
+            inset 0 0 15px rgba(255, 0, 255, 0.2);
     }
 }
 
-@keyframes form-scan {
-    0% { left: -100%; }
-    100% { left: 100%; }
+@keyframes scanline {
+    0% { 
+        left: -100%;
+        opacity: 0;
+    }
+    50% { 
+        opacity: 1;
+    }
+    100% { 
+        left: 100%;
+        opacity: 0;
+    }
 }
 
 .contact-form {
@@ -360,7 +394,9 @@ body {
     border: 1px solid var(--neon-cyan);
     border-radius: 4px;
     position: relative;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.1),
+        inset 0 0 15px rgba(0, 255, 255, 0.05);
     max-width: 400px;
     clip-path: polygon(
         10px 0,
@@ -372,21 +408,37 @@ body {
         0 calc(100% - 10px),
         0 10px
     );
+    animation: formGlitch 5s infinite;
 }
 
-.contact-form::before {
+.contact-form::before,
+.contact-form::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg,
-        transparent,
-        var(--neon-cyan),
-        transparent
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 0%,
+        rgba(0, 255, 255, 0.05) 45%,
+        rgba(255, 0, 255, 0.05) 55%,
+        transparent 100%
     );
-    animation: form-scan 3s linear infinite;
+    clip-path: var(--clip);
+    animation: glitchBorder 4s infinite;
+    pointer-events: none;
+}
+
+.contact-form::after {
+    --clip: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    background: linear-gradient(135deg,
+        transparent 0%,
+        rgba(255, 0, 255, 0.1) 45%,
+        rgba(0, 255, 255, 0.1) 55%,
+        transparent 100%
+    );
+    animation: glitchBorder 4s infinite reverse;
 }
 
 .cyber-button {
@@ -715,4 +767,20 @@ body {
     .cyber-header {
         padding: 2rem 0;
     }
+}
+
+@keyframes formGlitch {
+    0%, 100% { transform: none; filter: none; }
+    92% { transform: skew(1deg); filter: hue-rotate(0deg); }
+    93% { transform: skew(-1deg); filter: hue-rotate(90deg); }
+    94% { transform: skew(2deg); filter: hue-rotate(180deg); }
+    95% { transform: skew(-2deg); filter: hue-rotate(270deg); }
+    96% { transform: skew(1deg); filter: hue-rotate(360deg); }
+    97% { transform: none; filter: none; }
+}
+
+@keyframes glitchBorder {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(-2px); opacity: 0.7; }
+    75% { transform: translateX(2px); opacity: 0.3; }
 }
