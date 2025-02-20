@@ -107,7 +107,6 @@ body {
 .neon-link:hover {
     background: rgba(0, 255, 255, 0.1);
     box-shadow: 0 0 15px var(--neon-cyan);
-    animation: glitch-hover 0.4s infinite alternate;
     transform: scale(1.05) translateY(-2px);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
