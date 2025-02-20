@@ -151,6 +151,14 @@
         <!-- Contact section script -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // Handle quotes navigation
+                // Handle quotes navigation
+                document.querySelector('.cyber-nav a[href="#quotes"]').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const quotesSection = document.getElementById('quotes');
+                    quotesSection.classList.toggle('active');
+                });
+
                 // Add glitch effect to form inputs on focus
                 const inputs = document.querySelectorAll('.neon-input');
                 inputs.forEach(input => {
@@ -235,5 +243,22 @@
     <script>
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Smooth scroll to contact section
+                const contactLink = document.querySelector('nav a[href="#contact"]');
+                if (contactLink) {
+                    contactLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const contactSection = document.getElementById('contact');
+                        if (contactSection) {
+                            contactSection.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                }
+            });
+        </script>
 </body>
 </html>
