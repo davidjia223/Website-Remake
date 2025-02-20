@@ -12,11 +12,10 @@ body {
     color: var(--terminal-green);
     font-family: 'VT323', monospace;
     margin: 0;
-    padding: 100px 8%;
+    padding: 0;
     line-height: 2.8;
-    max-width: 1800px;
-    margin: 0 auto;
     letter-spacing: 0.05em;
+    overflow-x: hidden;
 }
 
 .cyber-header {
@@ -211,25 +210,27 @@ body {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     gap: 2rem;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 1rem;
+    align-items: start;
 }
 
 .contact-info {
-    padding: 2rem;
+    padding: 1.5rem;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--neon-cyan);
     border-radius: 4px;
     position: relative;
     overflow: hidden;
+    max-width: 350px;
 }
 
 .info-item {
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
-    padding: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
     background: rgba(0, 255, 255, 0.05);
     border-left: 3px solid var(--neon-cyan);
 }
@@ -265,8 +266,8 @@ body {
 
 .contact-form {
     display: grid;
-    gap: 2.5rem;
-    padding: 2.5rem;
+    gap: 1.5rem;
+    padding: 2rem;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--neon-cyan);
     border-radius: 4px;
@@ -274,16 +275,8 @@ body {
     box-shadow:
         0 0 30px rgba(0, 255, 255, 0.1),
         inset 0 0 20px rgba(0, 255, 255, 0.05);
-    clip-path: polygon(
-        20px 0,
-        calc(100% - 20px) 0,
-        100% 20px,
-        100% calc(100% - 20px),
-        calc(100% - 20px) 100%,
-        20px 100%,
-        0 calc(100% - 20px),
-        0 20px
-    );
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .contact-form::before {
@@ -308,7 +301,7 @@ body {
 
 .form-group {
     position: relative;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     overflow: hidden;
 }
 
@@ -351,10 +344,10 @@ body {
     width: 100%;
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid var(--neon-cyan);
-    padding: 1.2rem;
+    padding: 0.8rem;
     color: var(--terminal-green);
     font-family: 'VT323', monospace;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -509,14 +502,18 @@ body {
 @media (max-width: 768px) {
     .contact-container {
         grid-template-columns: 1fr;
+        max-width: 500px;
+        gap: 1.5rem;
     }
     
     .contact-info {
+        max-width: 100%;
         order: 2;
     }
     
     .contact-form {
         order: 1;
+        max-width: 100%;
     }
 }
 
@@ -823,5 +820,75 @@ body {
     
     .cyber-header {
         padding: 2rem 0;
+    }
+}
+
+/* Full viewport section styles */
+section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 8%;
+    position: relative;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+
+/* Enable smooth scrolling and snap scrolling */
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+}
+
+/* Adjust specific sections */
+.hero {
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(180deg, var(--cyber-dark) 0%, rgba(0, 8, 20, 0.9) 100%);
+}
+
+#services {
+    background: rgba(0, 8, 20, 0.95);
+}
+
+.quotes-section {
+    padding: 0;  /* Remove default padding since quotes need full width */
+    justify-content: flex-start;
+}
+
+.contact-section {
+    background: linear-gradient(0deg, var(--cyber-dark) 0%, rgba(0, 8, 20, 0.9) 100%);
+}
+
+/* Adjust service grid for full height */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Add section transitions */
+section {
+    transition: transform 0.5s ease-out;
+}
+
+section:target {
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    section {
+        padding: 2rem 4%;
+    }
+    
+    .service-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
