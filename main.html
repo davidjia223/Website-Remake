@@ -321,14 +321,16 @@
                 progressBar.style.transform = `scaleX(${scrolled / 100})`;
             });
             
-            // Add glitch effect on hover
+            // Remove all hover animations
             navLinks.forEach(link => {
-                link.addEventListener('mouseenter', function() {
-                    this.style.animation = 'glitch-hover 0.3s infinite';
+                link.addEventListener('mouseenter', () => {
+                    link.style.animation = 'none';
+                    link.style.transform = 'none';
                 });
                 
-                link.addEventListener('mouseleave', function() {
-                    this.style.animation = '';
+                link.addEventListener('mouseleave', () => {
+                    link.style.animation = 'none';
+                    link.style.transform = 'none';
                 });
             });
             

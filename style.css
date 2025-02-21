@@ -40,7 +40,48 @@ body {
 }
 
 .neon-link {
-    padding: 1.5rem 2rem;
+    color: var(--terminal-green);
+    text-decoration: none;
+    padding: 1rem;
+    border: none;
+    display: block;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    position: relative;
+    background: transparent;
+}
+
+.neon-link:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px var(--neon-cyan);
+    color: #fff;
+}
+
+/* Remove all hover animations */
+.neon-link:hover,
+.neon-link:hover::before,
+.neon-link:hover::after,
+.neon-link:hover span {
+    animation: none;
+    transform: none;
+    clip-path: none;
+}
+
+/* Remove glitch-hover keyframes */
+@keyframes glitch-hover {
+    0%, 100% { 
+        transform: none;
+        clip-path: none;
+    }
+}
+
+/* Ensure no animations on active state */
+.neon-link.active {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 20px var(--neon-pink);
+    animation: none;
+    transform: none;
 }
 
 .terminal-box {
@@ -93,24 +134,6 @@ body {
     margin: 2rem 0;
 }
 
-.neon-link {
-    color: var(--terminal-green);
-    text-decoration: none;
-    padding: 1rem;
-    border: 1px solid var(--neon-cyan);
-    display: block;
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.neon-link:hover {
-    background: rgba(0, 255, 255, 0.1);
-    box-shadow: 0 0 15px var(--neon-cyan);
-    transform: scale(1.05) translateY(-2px);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-}
-
 /* Terminal-style sections */
 .terminal-box {
     background: rgba(0, 0, 0, 0.8);
@@ -160,29 +183,9 @@ body {
 }
 
 @keyframes glitch-hover {
-    0% {
-        transform: translate(0);
-        clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
-    }
-    20% {
-        transform: translate(-2px, 2px);
-        clip-path: polygon(0 15%, 100% 25%, 100% 15%, 0 25%);
-    }
-    40% {
-        transform: translate(2px, -1px);
-        clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%);
-    }
-    60% {
-        transform: translate(1px, 3px);
-        clip-path: polygon(0 40%, 100% 60%, 100% 40%, 0 60%);
-    }
-    80% {
-        transform: translate(-1px, -2px);
-        clip-path: polygon(0 70%, 100% 60%, 100% 70%, 0 60%);
-    }
-    100% {
-        transform: translate(0);
-        clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
+    0%, 100% { 
+        transform: none;
+        clip-path: none;
     }
 }
 
@@ -254,16 +257,16 @@ body {
     color: var(--terminal-green);
     text-decoration: none;
     padding: 0.5rem 1rem;
-    border: 1px solid var(--neon-cyan);
+    border: none;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    background: transparent;
 }
 
 .social-link:hover {
     background: rgba(0, 255, 255, 0.1);
     box-shadow: 0 0 15px var(--neon-cyan);
-    transform: translateY(-2px);
+    color: #fff;
 }
 
 .neon-input {
@@ -442,9 +445,24 @@ body {
 }
 
 .cyber-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    margin-top: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--terminal-green);
+    padding: 1.5rem 3rem;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-button:hover {
+    background: rgba(0, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(240, 0, 240, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -461,38 +479,6 @@ body {
     .contact-form {
         max-width: 100%;
     }
-}
-
-.cyber-button {
-    background: linear-gradient(135deg,
-        var(--neon-cyan) 0%,
-        var(--neon-pink) 100%);
-    border: none;
-    color: var(--cyber-dark);
-    padding: 1.5rem 3rem;
-    font-family: 'VT323', monospace;
-    font-size: 1.4rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.cyber-button::before {
-    content: '>';
-    position: absolute;
-    left: 1rem;
-    opacity: 0.8;
-}
-
-.cyber-button:hover {
-    background: linear-gradient(135deg,
-        var(--neon-pink) 0%,
-        var(--neon-cyan) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(240, 0, 240, 0.4);
 }
 
 @keyframes scanline {
