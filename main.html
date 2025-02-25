@@ -245,23 +245,53 @@
     <script>
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Smooth scroll to contact section
-                const contactLink = document.querySelector('nav a[href="#contact"]');
-                if (contactLink) {
-                    contactLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const contactSection = document.getElementById('contact');
-                        if (contactSection) {
-                            contactSection.scrollIntoView({
-                                behavior: 'smooth'
-                            });
-                        }
-                    });
+
+    <!-- Add scroll reveal animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add reveal classes to elements
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('reveal-on-scroll');
+                
+                // Add stagger effect to service cards
+                if (section.querySelector('.service-grid')) {
+                    section.querySelector('.service-grid').classList.add('stagger-children');
                 }
             });
-        </script>
+
+            document.querySelectorAll('.service-card, .cyber-quote, .contact-form, .contact-info').forEach(el => {
+                el.classList.add('reveal-on-scroll');
+            });
+
+            // Initialize Intersection Observer
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // If the element has stagger children, activate them too
+                        if (entry.target.classList.contains('stagger-children')) {
+                            entry.target.classList.add('active');
+                        }
+                        
+                        // Unobserve after animation
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all reveal elements
+            document.querySelectorAll('.reveal-on-scroll, .stagger-children').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

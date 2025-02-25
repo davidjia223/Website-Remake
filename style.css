@@ -1028,3 +1028,82 @@ body {
         clip: rect(51px, 9999px, 46px, 0);
     }
 }
+
+/* Scroll reveal animations */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+.stagger-children.active > *:nth-child(1) { transition-delay: 0.1s; }
+.stagger-children.active > *:nth-child(2) { transition-delay: 0.2s; }
+.stagger-children.active > *:nth-child(3) { transition-delay: 0.3s; }
+.stagger-children.active > *:nth-child(4) { transition-delay: 0.4s; }
+.stagger-children.active > *:nth-child(5) { transition-delay: 0.5s; }
+
+.stagger-children.active > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Card stack effect */
+.service-card, .cyber-quote, .contact-form, .contact-info {
+    transform-origin: center bottom;
+    backface-visibility: hidden;
+    transition: all 0.8s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+.service-card.reveal-on-scroll,
+.cyber-quote.reveal-on-scroll,
+.contact-form.reveal-on-scroll,
+.contact-info.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(100px) rotate3d(1, 0, 0, 45deg);
+}
+
+.service-card.reveal-on-scroll.active,
+.cyber-quote.reveal-on-scroll.active,
+.contact-form.reveal-on-scroll.active,
+.contact-info.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0) rotate3d(1, 0, 0, 0deg);
+}
+
+/* Section reveal effect */
+section {
+    position: relative;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+section.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Enhance section headings reveal */
+section h2 {
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+}
+
+section.active h2 {
+    opacity: 1;
+    transform: translateY(0);
+}
