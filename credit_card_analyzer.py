@@ -7,11 +7,6 @@ import time
 from typing import List, Dict, Optional
 import re
 from dataclasses import dataclass
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 @dataclass
 class CreditCardOffer:
@@ -252,6 +247,17 @@ class CreditCardAnalyzer:
     def __init__(self, cards_data: List[CreditCardOffer]):
         self.cards_data = cards_data
         self.df = self._create_dataframe()
+        
+        # Import visualization libraries only when needed
+        try:
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            self.plt = plt
+            self.sns = sns
+            self.visualization_available = True
+        except ImportError:
+            self.visualization_available = False
+            print("Visualization libraries not available. Install matplotlib and seaborn for visualization features.")
 
     def _create_dataframe(self) -> pd.DataFrame:
         """Convert card offers to pandas DataFrame"""
@@ -345,11 +351,219 @@ class CreditCardAnalyzer:
             report += f"\n- Reward Rate: {top_card[f'reward_{category}']}%\n"
         
         return report
+        
+    def visualize_rankings(self, ranked_cards: pd.DataFrame, top_n: int = 5) -> None:
+        """
+        Visualize credit card rankings
+        
+        Args:
+            ranked_cards: DataFrame with ranked cards
+            top_n: Number of top cards to display
+        """
+        if not self.visualization_available:
+            print("Visualization libraries not available. Install matplotlib and seaborn.")
+            return
+            
+        # Get top N cards
+        top_cards = ranked_cards.head(top_n)
+        
+        # Set up the figure
+        fig, axes = self.plt.subplots(2, 2, figsize=(15, 12))
+        fig.suptitle('Credit Card Analysis', fontsize=16)
+        
+        # 1. Net Value Comparison
+        ax1 = axes[0, 0]
+        top_cards.sort_values('net_value').plot(
+            kind='barh', 
+            y='net_value', 
+            x='card_name',
+            ax=ax1,
+            color='skyblue'
+        )
+        ax1.set_title('Net Annual Value')
+        ax1.set_xlabel('Value ($)')
+        
+        # 2. Annual Fee vs. Rewards
+        ax2 = axes[0, 1]
+        ax2.scatter(
+            top_cards['annual_fee'],
+            top_cards['annual_rewards'],
+            s=100,
+            alpha=0.7
+        )
+        for i, card in top_cards.iterrows():
+            ax2.annotate(
+                card['card_name'],
+                (card['annual_fee'], card['annual_rewards']),
+                xytext=(5, 5),
+                textcoords='offset points'
+            )
+        ax2.set_title('Annual Fee vs. Rewards')
+        ax2.set_xlabel('Annual Fee ($)')
+        ax2.set_ylabel('Annual Rewards ($)')
+        
+        # 3. Rewards by Category
+        ax3 = axes[1, 0]
+        reward_cols = [col for col in top_cards.columns if col.startswith('reward_')]
+        if reward_cols:
+            reward_data = top_cards[['card_name'] + reward_cols].set_index('card_name')
+            reward_data.columns = [col.replace('reward_', '') for col in reward_data.columns]
+            reward_data.plot(kind='bar', ax=ax3)
+            ax3.set_title('Rewards by Category')
+            ax3.set_ylabel('Reward Rate (%)')
+            ax3.set_xticklabels(ax3.get_xticklabels(), rotation=45, ha='right')
+        else:
+            ax3.text(0.5, 0.5, 'No reward category data available', 
+                    horizontalalignment='center', verticalalignment='center')
+        
+        # 4. Welcome Bonus Comparison
+        ax4 = axes[1, 1]
+        # Extract numeric values from welcome bonus text using regex
+        welcome_values = []
+        for bonus in top_cards['welcome_bonus']:
+            matches = re.findall(r'(\d+)', str(bonus))
+            welcome_values.append(int(matches[0]) if matches else 0)
+        
+        welcome_df = pd.DataFrame({
+            'card_name': top_cards['card_name'],
+            'welcome_value': welcome_values
+        })
+        
+        welcome_df.sort_values('welcome_value').plot(
+            kind='barh',
+            y='welcome_value',
+            x='card_name',
+            ax=ax4,
+            color='lightgreen'
+        )
+        ax4.set_title('Welcome Bonus Value')
+        ax4.set_xlabel('Estimated Value ($)')
+        
+        self.plt.tight_layout(rect=[0, 0, 1, 0.95])
+        self.plt.show()
+        
+    def export_interactive_visualization(self, ranked_cards: pd.DataFrame, filename: str = 'card_visualization.html') -> None:
+        """
+        Export interactive visualizations using Plotly
+        
+        Args:
+            ranked_cards: DataFrame with ranked cards
+            filename: Output HTML file name
+        """
+        try:
+            import plotly.express as px
+            import plotly.graph_objects as go
+            from plotly.subplots import make_subplots
+        except ImportError:
+            print("Plotly not available. Install plotly for interactive visualizations.")
+            return
+            
+        # Get top 10 cards
+        top_cards = ranked_cards.head(10)
+        
+        # Create subplot figure
+        fig = make_subplots(
+            rows=2, cols=2,
+            subplot_titles=(
+                "Net Annual Value", 
+                "Annual Fee vs. Rewards",
+                "Rewards by Category",
+                "Welcome Bonus Comparison"
+            ),
+            specs=[
+                [{"type": "bar"}, {"type": "scatter"}],
+                [{"type": "bar"}, {"type": "bar"}]
+            ]
+        )
+        
+        # 1. Net Value Comparison
+        fig.add_trace(
+            go.Bar(
+                x=top_cards['net_value'],
+                y=top_cards['card_name'],
+                orientation='h',
+                marker_color='rgba(0, 255, 255, 0.6)',
+                name='Net Value'
+            ),
+            row=1, col=1
+        )
+        
+        # 2. Annual Fee vs. Rewards
+        fig.add_trace(
+            go.Scatter(
+                x=top_cards['annual_fee'],
+                y=top_cards['annual_rewards'],
+                mode='markers+text',
+                text=top_cards['card_name'],
+                textposition='top center',
+                marker=dict(
+                    size=12,
+                    color='rgba(255, 0, 255, 0.7)',
+                    line=dict(width=1, color='rgba(0, 0, 0, 0.5)')
+                ),
+                name='Cards'
+            ),
+            row=1, col=2
+        )
+        
+        # 3. Rewards by Category for the top card
+        top_card = top_cards.iloc[0]
+        reward_cols = [col for col in top_cards.columns if col.startswith('reward_')]
+        categories = [col.replace('reward_', '') for col in reward_cols]
+        values = [top_card[col] if col in top_card else 0 for col in reward_cols]
+        
+        fig.add_trace(
+            go.Bar(
+                x=categories,
+                y=values,
+                marker_color='rgba(255, 255, 0, 0.6)',
+                name=f"{top_card['card_name']} Rewards"
+            ),
+            row=2, col=1
+        )
+        
+        # 4. Welcome Bonus Comparison
+        # Extract numeric values from welcome bonus text
+        welcome_values = []
+        for bonus in top_cards['welcome_bonus']:
+            matches = re.findall(r'(\d+)', str(bonus))
+            welcome_values.append(int(matches[0]) if matches else 0)
+        
+        fig.add_trace(
+            go.Bar(
+                x=welcome_values,
+                y=top_cards['card_name'],
+                orientation='h',
+                marker_color='rgba(0, 255, 0, 0.6)',
+                name='Welcome Bonus'
+            ),
+            row=2, col=2
+        )
+        
+        # Update layout
+        fig.update_layout(
+            title_text="Credit Card Analysis Dashboard",
+            height=800,
+            showlegend=False,
+            template="plotly_dark"
+        )
+        
+        # Save to HTML file
+        fig.write_html(filename)
+        print(f"Interactive visualization saved to {filename}")
 
 def main():
     # Initialize scraper and get data
     scraper = CreditCardScraper()
+    
+    print("=== Canadian Credit Card Analyzer ===\n")
+    print("Scraping credit card data from RateHub...")
     scraper.scrape_ratehub()
+    
+    print("\nScraping credit card data from major Canadian banks...")
+    scraper.scrape_canadian_banks()
+    
+    print(f"\nTotal cards collected: {len(scraper.cards_data)}")
     
     # Initialize analyzer
     analyzer = CreditCardAnalyzer(scraper.cards_data)
@@ -370,6 +584,7 @@ def main():
         'income_requirement': -0.1
     }
     
+    print("\nRanking cards based on spending profile and preferences...")
     # Rank cards
     ranked_cards = analyzer.rank_cards(spending_profile, preferences)
     
@@ -380,6 +595,20 @@ def main():
     # Save results to CSV
     ranked_cards.to_csv('credit_card_rankings.csv', index=False)
     print("\nRankings saved to 'credit_card_rankings.csv'")
+    
+    # Create visualizations
+    try:
+        print("\nGenerating visualizations...")
+        analyzer.visualize_rankings(ranked_cards, top_n=10)
+        
+        print("\nCreating interactive dashboard...")
+        analyzer.export_interactive_visualization(ranked_cards, 'credit_card_dashboard.html')
+        print("Interactive dashboard saved to 'credit_card_dashboard.html'")
+    except Exception as e:
+        print(f"\nError creating visualizations: {str(e)}")
+        print("Visualization libraries may not be installed. Run 'pip install matplotlib seaborn plotly'")
+    
+    print("\nAnalysis complete!")
 
 if __name__ == "__main__":
     main() 

@@ -15,7 +15,7 @@
     
     <header class="cyber-header">
         <h1 class="glitch" data-text="DAVID_JIA">DAVID_JIA</h1>
-        <p class="cyber-tagline">// Full-Stack Dev - Data Scientist</p>
+        <p class="cyber-tagline">// Full-Stack Developer && Cyber Enthusiast</p>
     </header>
     
     <nav class="cyber-nav">
@@ -250,10 +250,10 @@
                         <div class="feature-list">
                             <h4>Key Features:</h4>
                             <ul>
-                                <li><i class="fas fa-robot"></i> Automated Web Scraping</li>
-                                <li><i class="fas fa-chart-bar"></i> Reward Rate Analysis</li>
-                                <li><i class="fas fa-calculator"></i> Personalized Value Calculator</li>
-                                <li><i class="fas fa-trophy"></i> Card Ranking System</li>
+                                <li><i class="fas fa-robot"></i> <span>Automated Web Scraping</span></li>
+                                <li><i class="fas fa-chart-bar"></i> <span>Reward Rate Analysis</span></li>
+                                <li><i class="fas fa-calculator"></i> <span>Personalized Value Calculator</span></li>
+                                <li><i class="fas fa-trophy"></i> <span>Card Ranking System</span></li>
                             </ul>
                         </div>
                         
@@ -265,23 +265,23 @@
                         <div class="code-preview">
                             <h4>Sample Code:</h4>
                             <pre><code>
-# Initialize scraper and get data
-scraper = CreditCardScraper()
+<span class="comment"># Initialize scraper and get data</span>
+<span class="keyword">scraper</span> = <span class="keyword">CreditCardScraper</span>()
 scraper.scrape_ratehub()
 
-# Initialize analyzer with your spending
-analyzer = CreditCardAnalyzer(scraper.cards_data)
-spending_profile = {
-    'groceries': 6000,  # $6000/year
-    'gas': 2400,        # $2400/year
-    'dining': 3600,     # $3600/year
-    'travel': 2000      # $2000/year
+<span class="comment"># Initialize analyzer with your spending</span>
+<span class="keyword">analyzer</span> = <span class="keyword">CreditCardAnalyzer</span>(scraper.cards_data)
+<span class="keyword">spending_profile</span> = {
+    <span class="string">'groceries'</span>: <span class="number">6000</span>,  <span class="comment"># $6000/year</span>
+    <span class="string">'gas'</span>: <span class="number">2400</span>,        <span class="comment"># $2400/year</span>
+    <span class="string">'dining'</span>: <span class="number">3600</span>,     <span class="comment"># $3600/year</span>
+    <span class="string">'travel'</span>: <span class="number">2000</span>      <span class="comment"># $2000/year</span>
 }
 
-# Rank cards based on your preferences
-ranked_cards = analyzer.rank_cards(
+<span class="comment"># Rank cards based on your preferences</span>
+<span class="keyword">ranked_cards</span> = analyzer.rank_cards(
     spending_profile, 
-    {'welcome_bonus': 0.3, 'interest_rate': -0.2}
+    {<span class="string">'welcome_bonus'</span>: <span class="number">0.3</span>, <span class="string">'interest_rate'</span>: <span class="number">-0.2</span>}
 )
                             </code></pre>
                         </div>
@@ -412,126 +412,6 @@ ranked_cards = analyzer.rank_cards(
                 const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
                 progressBar.style.transform = `scaleX(${scrolled / 100})`;
             });
-            
-            // Remove all hover animations
-            navLinks.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    link.style.animation = 'none';
-                    link.style.transform = 'none';
-                });
-                
-                link.addEventListener('mouseleave', () => {
-                    link.style.animation = 'none';
-                    link.style.transform = 'none';
-                });
-            });
-            
-            // Initial check for active section
-            setTimeout(() => {
-                window.dispatchEvent(new Event('scroll'));
-            }, 100);
-        });
-    </script>
-
-    <script>
-        // Add interactive credit card visualization demo
-        function showCreditCardVisualization() {
-            // Sample credit card comparison data
-            const cardNames = ['Platinum Cash', 'Travel Elite', 'Rewards Plus', 'No-Fee Basic', 'Premium World'];
-            const annualFees = [120, 150, 99, 0, 399];
-            const cashbackRates = [2, 1.5, 1.75, 0.5, 3];
-            const welcomeBonuses = [300, 500, 250, 50, 800];
-            
-            // Create rewards comparison chart
-            const rewardsData = [{
-                x: cardNames,
-                y: cashbackRates,
-                type: 'bar',
-                name: 'Cashback Rate (%)',
-                marker: {
-                    color: 'rgba(0, 255, 255, 0.7)',
-                    line: {
-                        color: 'rgba(255, 0, 255, 0.8)',
-                        width: 1.5
-                    }
-                }
-            }];
-            
-            Plotly.newPlot('rewards-comparison-plot', rewardsData, {
-                title: 'Cashback Rate Comparison',
-                height: 300,
-                margin: { t: 30, b: 80, l: 50, r: 30 },
-                xaxis: {
-                    tickangle: -45
-                },
-                yaxis: {
-                    title: 'Cashback Rate (%)'
-                },
-                paper_bgcolor: 'rgba(0,0,0,0.3)',
-                plot_bgcolor: 'rgba(0,0,0,0.2)',
-                font: {
-                    color: '#00ffff'
-                }
-            });
-            
-            // Create value analysis chart
-            const valueData = [{
-                x: cardNames,
-                y: welcomeBonuses,
-                type: 'bar',
-                name: 'Welcome Bonus ($)',
-                marker: {
-                    color: 'rgba(255, 0, 255, 0.7)',
-                    line: {
-                        color: 'rgba(0, 255, 255, 0.8)',
-                        width: 1.5
-                    }
-                }
-            }, {
-                x: cardNames,
-                y: annualFees,
-                type: 'bar',
-                name: 'Annual Fee ($)',
-                marker: {
-                    color: 'rgba(255, 255, 0, 0.7)',
-                    line: {
-                        color: 'rgba(255, 0, 0, 0.8)',
-                        width: 1.5
-                    }
-                }
-            }];
-            
-            Plotly.newPlot('value-analysis-plot', valueData, {
-                title: 'Welcome Bonus vs Annual Fee',
-                height: 300,
-                margin: { t: 30, b: 80, l: 50, r: 30 },
-                xaxis: {
-                    tickangle: -45
-                },
-                barmode: 'group',
-                paper_bgcolor: 'rgba(0,0,0,0.3)',
-                plot_bgcolor: 'rgba(0,0,0,0.2)',
-                font: {
-                    color: '#00ffff'
-                },
-                legend: {
-                    orientation: 'h',
-                    y: -0.2
-                }
-            });
-        }
-
-        // Initialize visualizations when section becomes visible
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        showCreditCardVisualization();
-                    }
-                });
-            });
-
-            observer.observe(document.querySelector('.data-science-section'));
         });
     </script>
 </body>
