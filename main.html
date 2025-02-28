@@ -7,19 +7,22 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Plotly.js for interactive visualizations -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <div class="scroll-progress"></div>
     
     <header class="cyber-header">
         <h1 class="glitch" data-text="DAVID_JIA">DAVID_JIA</h1>
-        <p class="cyber-tagline">// Full-Stack Dev - Cyber Enthusiast</p>
+        <p class="cyber-tagline">// Full-Stack Dev - Data Scientist</p>
     </header>
     
     <nav class="cyber-nav">
         <ul>
             <li><a href="#bio" class="neon-link">>_Bio</a></li>
             <li><a href="#work" class="neon-link">>_Work</a></li>
+            <li><a href="#data-science" class="neon-link">>_Data_Science</a></li>
             <li><a href="#quotes" class="neon-link">>_Quotes</a></li>
             <li><a href="#contact" class="neon-link scroll-trigger">>_Contact</a></li>
         </ul>
@@ -236,6 +239,65 @@
                 </form>
             </div>
         </section>
+
+        <section id="data-science" class="data-science-section reveal-on-scroll">
+            <h2 class="glitch" data-text="Credit Card Analysis">Credit Card Analysis</h2>
+            
+            <div class="project-container">
+                <div class="data-project-card">
+                    <h3>Canadian Credit Card Analyzer</h3>
+                    <div class="project-content">
+                        <div class="feature-list">
+                            <h4>Key Features:</h4>
+                            <ul>
+                                <li><i class="fas fa-robot"></i> Automated Web Scraping</li>
+                                <li><i class="fas fa-chart-bar"></i> Reward Rate Analysis</li>
+                                <li><i class="fas fa-calculator"></i> Personalized Value Calculator</li>
+                                <li><i class="fas fa-trophy"></i> Card Ranking System</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="visualization-container">
+                            <div id="rewards-comparison-plot" class="plot-box"></div>
+                            <div id="value-analysis-plot" class="plot-box"></div>
+                        </div>
+                        
+                        <div class="code-preview">
+                            <h4>Sample Code:</h4>
+                            <pre><code>
+# Initialize scraper and get data
+scraper = CreditCardScraper()
+scraper.scrape_ratehub()
+
+# Initialize analyzer with your spending
+analyzer = CreditCardAnalyzer(scraper.cards_data)
+spending_profile = {
+    'groceries': 6000,  # $6000/year
+    'gas': 2400,        # $2400/year
+    'dining': 3600,     # $3600/year
+    'travel': 2000      # $2000/year
+}
+
+# Rank cards based on your preferences
+ranked_cards = analyzer.rank_cards(
+    spending_profile, 
+    {'welcome_bonus': 0.3, 'interest_rate': -0.2}
+)
+                            </code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="project-actions">
+                        <button class="cyber-button" onclick="window.location.href='https://github.com/yourusername/credit-card-analyzer'">
+                            <span class="button-text">VIEW_SOURCE</span>
+                        </button>
+                        <button class="cyber-button" onclick="showCreditCardVisualization()">
+                            <span class="button-text">RUN_DEMO</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -368,6 +430,108 @@
             setTimeout(() => {
                 window.dispatchEvent(new Event('scroll'));
             }, 100);
+        });
+    </script>
+
+    <script>
+        // Add interactive credit card visualization demo
+        function showCreditCardVisualization() {
+            // Sample credit card comparison data
+            const cardNames = ['Platinum Cash', 'Travel Elite', 'Rewards Plus', 'No-Fee Basic', 'Premium World'];
+            const annualFees = [120, 150, 99, 0, 399];
+            const cashbackRates = [2, 1.5, 1.75, 0.5, 3];
+            const welcomeBonuses = [300, 500, 250, 50, 800];
+            
+            // Create rewards comparison chart
+            const rewardsData = [{
+                x: cardNames,
+                y: cashbackRates,
+                type: 'bar',
+                name: 'Cashback Rate (%)',
+                marker: {
+                    color: 'rgba(0, 255, 255, 0.7)',
+                    line: {
+                        color: 'rgba(255, 0, 255, 0.8)',
+                        width: 1.5
+                    }
+                }
+            }];
+            
+            Plotly.newPlot('rewards-comparison-plot', rewardsData, {
+                title: 'Cashback Rate Comparison',
+                height: 300,
+                margin: { t: 30, b: 80, l: 50, r: 30 },
+                xaxis: {
+                    tickangle: -45
+                },
+                yaxis: {
+                    title: 'Cashback Rate (%)'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0.3)',
+                plot_bgcolor: 'rgba(0,0,0,0.2)',
+                font: {
+                    color: '#00ffff'
+                }
+            });
+            
+            // Create value analysis chart
+            const valueData = [{
+                x: cardNames,
+                y: welcomeBonuses,
+                type: 'bar',
+                name: 'Welcome Bonus ($)',
+                marker: {
+                    color: 'rgba(255, 0, 255, 0.7)',
+                    line: {
+                        color: 'rgba(0, 255, 255, 0.8)',
+                        width: 1.5
+                    }
+                }
+            }, {
+                x: cardNames,
+                y: annualFees,
+                type: 'bar',
+                name: 'Annual Fee ($)',
+                marker: {
+                    color: 'rgba(255, 255, 0, 0.7)',
+                    line: {
+                        color: 'rgba(255, 0, 0, 0.8)',
+                        width: 1.5
+                    }
+                }
+            }];
+            
+            Plotly.newPlot('value-analysis-plot', valueData, {
+                title: 'Welcome Bonus vs Annual Fee',
+                height: 300,
+                margin: { t: 30, b: 80, l: 50, r: 30 },
+                xaxis: {
+                    tickangle: -45
+                },
+                barmode: 'group',
+                paper_bgcolor: 'rgba(0,0,0,0.3)',
+                plot_bgcolor: 'rgba(0,0,0,0.2)',
+                font: {
+                    color: '#00ffff'
+                },
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                }
+            });
+        }
+
+        // Initialize visualizations when section becomes visible
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        showCreditCardVisualization();
+                    }
+                });
+            });
+
+            observer.observe(document.querySelector('.data-science-section'));
         });
     </script>
 </body>

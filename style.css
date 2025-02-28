@@ -1107,3 +1107,187 @@ section.active h2 {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Data Science Section Styles */
+.data-science-section {
+    padding: 4rem 0;
+    background: var(--cyber-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.data-science-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--neon-cyan) 50%,
+        transparent 100%);
+    animation: scan-line 4s linear infinite;
+}
+
+.project-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.data-project-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--neon-cyan);
+    padding: 2rem;
+    margin: 2rem 0;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.data-project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+}
+
+.data-project-card h3 {
+    color: var(--neon-cyan);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.project-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-list {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-left: 3px solid var(--neon-pink);
+}
+
+.feature-list h4 {
+    color: var(--neon-pink);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.feature-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.feature-list i {
+    color: var(--neon-cyan);
+    font-size: 1.2rem;
+}
+
+.visualization-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.plot-box {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-cyan);
+    padding: 1rem;
+    height: 300px;
+    transition: all 0.3s ease;
+}
+
+.plot-box:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.code-preview {
+    grid-column: 1 / -1;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--terminal-green);
+    padding: 1.5rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow-x: auto;
+}
+
+.code-preview h4 {
+    color: var(--terminal-green);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.code-preview pre {
+    margin: 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.code-preview code {
+    font-family: 'Ubuntu Mono', monospace;
+    color: var(--terminal-green);
+    line-height: 1.6;
+}
+
+.project-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: flex-end;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .project-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .visualization-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .plot-box {
+        height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-container {
+        padding: 1rem;
+    }
+    
+    .data-project-card {
+        padding: 1rem;
+    }
+    
+    .project-actions {
+        flex-direction: column;
+    }
+    
+    .code-preview {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for the scan line */
+@keyframes scan-line {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
