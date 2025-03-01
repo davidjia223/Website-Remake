@@ -24,7 +24,7 @@
         <ul>
             <li><a href="#bio" class="neon-link">>_Bio</a></li>
             <li><a href="#work" class="neon-link">>_Work</a></li>
-            <li><a href="credit-card.html">SQL Project</a></li>
+            <li><a href="credit-card.html" target="_self" onclick="window.location.href='credit-card.html'; return false;" class="neon-link">>_CC Analytics</a></li>
             <li><a href="#quotes" class="neon-link">>_Quotes</a></li>
             <li><a href="#contact" class="neon-link scroll-trigger">>_Contact</a></li>
         </ul>
@@ -239,65 +239,6 @@
                         <span class="button-glitch"></span>
                     </button>
                 </form>
-            </div>
-        </section>
-
-        <section id="data-science" class="data-science-section reveal-on-scroll">
-            <h2 class="glitch" data-text="Credit Card Analysis">Credit Card Analysis</h2>
-            
-            <div class="project-container">
-                <div class="data-project-card">
-                    <h3>Canadian Credit Card Analyzer</h3>
-                    <div class="project-content">
-                        <div class="feature-list">
-                            <h4>Key Features:</h4>
-                            <ul>
-                                <li><i class="fas fa-robot"></i> <span>Automated Web Scraping</span></li>
-                                <li><i class="fas fa-chart-bar"></i> <span>Reward Rate Analysis</span></li>
-                                <li><i class="fas fa-calculator"></i> <span>Personalized Value Calculator</span></li>
-                                <li><i class="fas fa-trophy"></i> <span>Card Ranking System</span></li>
-                            </ul>
-                        </div>
-                        
-                        <div class="visualization-container">
-                            <div id="rewards-comparison-plot" class="plot-box"></div>
-                            <div id="value-analysis-plot" class="plot-box"></div>
-                        </div>
-                        
-                        <div class="code-preview">
-                            <h4>Sample Code:</h4>
-                            <pre><code>
-<span class="comment"># Initialize scraper and get data</span>
-<span class="keyword">scraper</span> = <span class="keyword">CreditCardScraper</span>()
-scraper.scrape_ratehub()
-
-<span class="comment"># Initialize analyzer with your spending</span>
-<span class="keyword">analyzer</span> = <span class="keyword">CreditCardAnalyzer</span>(scraper.cards_data)
-<span class="keyword">spending_profile</span> = {
-    <span class="string">'groceries'</span>: <span class="number">6000</span>,  <span class="comment"># $6000/year</span>
-    <span class="string">'gas'</span>: <span class="number">2400</span>,        <span class="comment"># $2400/year</span>
-    <span class="string">'dining'</span>: <span class="number">3600</span>,     <span class="comment"># $3600/year</span>
-    <span class="string">'travel'</span>: <span class="number">2000</span>      <span class="comment"># $2000/year</span>
-}
-
-<span class="comment"># Rank cards based on your preferences</span>
-<span class="keyword">ranked_cards</span> = analyzer.rank_cards(
-    spending_profile, 
-    {<span class="string">'welcome_bonus'</span>: <span class="number">0.3</span>, <span class="string">'interest_rate'</span>: <span class="number">-0.2</span>}
-)
-                            </code></pre>
-                        </div>
-                    </div>
-                    
-                    <div class="project-actions">
-                        <button class="cyber-button" onclick="window.location.href='https://github.com/yourusername/credit-card-analyzer'">
-                            <span class="button-text">VIEW_SOURCE</span>
-                        </button>
-                        <button class="cyber-button" onclick="showCreditCardVisualization()">
-                            <span class="button-text">RUN_DEMO</span>
-                        </button>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
@@ -515,9 +456,7 @@ scraper.scrape_ratehub()
                 });
         });
     </script>
-
-    <button id="credit-card-tab-button" onclick="showTab('credit-card-content')">Credit Card Rewards</button>
-
+    
     <script>
         function showTab(tabId) {
             // Hide all content sections
