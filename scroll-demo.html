@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scroll Reveal Demo | Cyberpunk Style</title>
+    <title>Slow Scroll Reveal Demo | Cyberpunk Style</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
-            margin: 2rem 0;
+            margin: 4rem 0; /* Increased margin for more scrolling space */
             border: 1px solid var(--neon-cyan);
         }
         
@@ -59,7 +59,7 @@
         }
         
         .sticky-demo {
-            height: 300vh;
+            height: 400vh; /* Increased height for slower reveal */
             position: relative;
         }
         
@@ -84,7 +84,8 @@
             font-size: 2rem;
             transform: scale(0.8);
             opacity: 0;
-            transition: transform 1s ease, opacity 1s ease;
+            transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 2.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .sticky-item.revealed {
@@ -93,7 +94,7 @@
         }
         
         .parallax-demo {
-            height: 150vh;
+            height: 200vh; /* Increased height for slower parallax effect */
             position: relative;
             overflow: hidden;
         }
@@ -114,14 +115,34 @@
             margin: 1rem;
             font-size: 1.5rem;
         }
+        
+        /* Highlight text to explain the slow reveal */
+        .highlight-text {
+            color: var(--neon-pink);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--neon-pink);
+        }
+        
+        /* Spacer to force more scrolling */
+        .scroll-spacer {
+            height: 30vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--terminal-green);
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
     <div class="scroll-progress"></div>
     
     <header class="cyber-header">
-        <h1 class="glitch" data-text="SCROLL_REVEAL">SCROLL_REVEAL</h1>
-        <p class="cyber-tagline">// Apple-style animations with a cyberpunk twist</p>
+        <h1 class="glitch" data-text="SLOW_REVEAL">SLOW_REVEAL</h1>
+        <p class="cyber-tagline">// Apple-style gradual animations with a cyberpunk twist</p>
     </header>
     
     <nav class="cyber-nav">
@@ -136,21 +157,31 @@
 
     <main>
         <section id="intro" class="demo-section">
-            <h2 class="demo-title">Scroll Down to See the Effects</h2>
+            <h2 class="demo-title">Scroll Slowly to Experience the Effects</h2>
             <div class="demo-content">
-                <p>This demo showcases various scroll reveal animations inspired by Apple's website design but with a cyberpunk aesthetic. As you scroll down, elements will reveal themselves with smooth animations and occasional glitch effects.</p>
+                <p>This demo showcases ultra-slow scroll reveal animations inspired by Apple's website design but with a cyberpunk aesthetic. Elements gradually fade in with extended transition times and carefully tuned easing curves.</p>
+                <p class="highlight-text">The animations now use longer durations (1.8-2.5s) and more sophisticated easing curves for that premium Apple-like feel.</p>
             </div>
         </section>
+        
+        <div class="scroll-spacer">
+            <p>↓ Keep scrolling to reveal the next section ↓</p>
+        </div>
 
         <section id="basic" class="demo-section reveal-section">
-            <h2 class="demo-title">Basic Reveal Animation</h2>
+            <h2 class="demo-title">Slow Basic Reveal Animation</h2>
             <div class="demo-content">
-                <p>This section uses the basic fade-in and slide-up animation. Elements start invisible and slightly below their final position, then animate into view as you scroll to them.</p>
+                <p>This section uses the basic fade-in and slide-up animation with an extended 1.8 second duration. Elements start invisible and 50px below their final position, then animate into view as you scroll to them.</p>
+                <p class="highlight-text">Notice how the animation starts earlier (at just 5% visibility) and takes longer to complete, creating a more dramatic entrance.</p>
             </div>
         </section>
+        
+        <div class="scroll-spacer">
+            <p>↓ Continue scrolling ↓</p>
+        </div>
 
         <section id="staggered" class="demo-section">
-            <h2 class="demo-title">Staggered Reveal Animation</h2>
+            <h2 class="demo-title">Slow Staggered Reveal Animation</h2>
             <div class="demo-grid reveal-stagger">
                 <div class="demo-card">
                     <div class="demo-image">01</div>
@@ -160,81 +191,98 @@
                 <div class="demo-card">
                     <div class="demo-image">02</div>
                     <h3>Second Card</h3>
-                    <p>This card appears after a slight delay.</p>
+                    <p>This card appears after a 0.25s delay.</p>
                 </div>
                 <div class="demo-card">
                     <div class="demo-image">03</div>
                     <h3>Third Card</h3>
-                    <p>This card appears with an even longer delay.</p>
+                    <p>This card appears with a 0.5s delay.</p>
                 </div>
                 <div class="demo-card">
                     <div class="demo-image">04</div>
                     <h3>Fourth Card</h3>
-                    <p>This card appears last in the sequence.</p>
+                    <p>This card appears with a 0.75s delay.</p>
                 </div>
             </div>
+            <p class="highlight-text">The staggered delay between elements has been increased to 250ms for a more pronounced sequential effect.</p>
         </section>
+        
+        <div class="scroll-spacer">
+            <p>↓ Almost there ↓</p>
+        </div>
 
         <section id="directional" class="demo-section">
-            <h2 class="demo-title">Directional Reveals</h2>
+            <h2 class="demo-title">Slow Directional Reveals</h2>
             <div class="demo-grid">
                 <div class="demo-card reveal-left">
                     <div class="demo-image"><i class="fas fa-arrow-right"></i></div>
                     <h3>From Left</h3>
-                    <p>This element slides in from the left.</p>
+                    <p>This element slides in from the left over 1.8 seconds.</p>
                 </div>
                 <div class="demo-card reveal-right">
                     <div class="demo-image"><i class="fas fa-arrow-left"></i></div>
                     <h3>From Right</h3>
-                    <p>This element slides in from the right.</p>
+                    <p>This element slides in from the right over 1.8 seconds.</p>
                 </div>
                 <div class="demo-card reveal-scale">
                     <div class="demo-image"><i class="fas fa-expand-alt"></i></div>
                     <h3>Scale Up</h3>
-                    <p>This element scales up from 90% to 100%.</p>
+                    <p>This element scales up from 85% to 100% over 1.8 seconds.</p>
                 </div>
                 <div class="demo-card cyber-reveal">
                     <div class="demo-image"><i class="fas fa-bolt"></i></div>
                     <h3>Cyber Glitch</h3>
-                    <p>This element has a cyberpunk glitch effect.</p>
+                    <p>This element has a slow cyberpunk glitch effect.</p>
                 </div>
             </div>
+            <p class="highlight-text">The directional animations now travel a greater distance (80px) and take longer to complete.</p>
         </section>
+        
+        <div class="scroll-spacer">
+            <p>↓ Keep going ↓</p>
+        </div>
 
         <section id="sticky" class="demo-section">
-            <h2 class="demo-title">Sticky Scroll Effect</h2>
-            <p>Scroll down to see the sticky effect in action.</p>
+            <h2 class="demo-title">Slow Sticky Scroll Effect</h2>
+            <p>Scroll down slowly to see the sticky effect in action. This mimics Apple's product reveals where content stays fixed while you scroll.</p>
             
             <div class="sticky-demo">
                 <div class="sticky-container">
                     <div class="sticky-item sticky-content">
-                        <p>This element stays fixed while you scroll, similar to Apple's product reveals.</p>
+                        <p>This element stays fixed while you scroll, with a 2.5 second reveal animation.</p>
                     </div>
                 </div>
             </div>
+            <p class="highlight-text">The sticky section has been extended to 400vh height to give more time for the slow reveal effect.</p>
         </section>
+        
+        <div class="scroll-spacer">
+            <p>↓ Final section below ↓</p>
+        </div>
 
         <section id="parallax" class="demo-section">
-            <h2 class="demo-title">Parallax Effect</h2>
-            <p>Elements move at different speeds as you scroll.</p>
+            <h2 class="demo-title">Slow Parallax Effect</h2>
+            <p>Elements move at different speeds as you scroll, but at a much slower rate than before.</p>
             
             <div class="parallax-container" style="height: 80vh; position: relative; overflow: hidden;">
-                <div class="parallax-element" data-parallax-speed="0.1" style="position: absolute; top: 20%; left: 10%;">
+                <div class="parallax-element" data-parallax-speed="0.05" style="position: absolute; top: 20%; left: 10%;">
+                    <div class="parallax-item">Very Slow Moving Element</div>
+                </div>
+                <div class="parallax-element" data-parallax-speed="0.1" style="position: absolute; top: 40%; left: 50%;">
                     <div class="parallax-item">Slow Moving Element</div>
                 </div>
-                <div class="parallax-element" data-parallax-speed="0.3" style="position: absolute; top: 40%; left: 50%;">
-                    <div class="parallax-item">Medium Speed Element</div>
-                </div>
-                <div class="parallax-element" data-parallax-speed="0.5" style="position: absolute; top: 60%; left: 30%;">
-                    <div class="parallax-item">Fast Moving Element</div>
+                <div class="parallax-element" data-parallax-speed="0.15" style="position: absolute; top: 60%; left: 30%;">
+                    <div class="parallax-item">Medium-Slow Moving Element</div>
                 </div>
             </div>
+            <p class="highlight-text">Parallax speeds have been reduced by 50% for a more subtle, premium effect.</p>
         </section>
     </main>
 
     <footer class="contact-section">
         <div class="contact-container">
-            <p>This demo showcases Apple-style scroll reveal animations with a cyberpunk aesthetic for your website.</p>
+            <p>This demo showcases ultra-slow Apple-style scroll reveal animations with a cyberpunk aesthetic for your website.</p>
+            <p class="highlight-text">All animations now use the cubic-bezier(0.16, 1, 0.3, 1) timing function, which is similar to Apple's preferred easing curve.</p>
         </div>
     </footer>
 </body>
