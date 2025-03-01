@@ -24,7 +24,7 @@
         <ul>
             <li><a href="#bio" class="neon-link">>_Bio</a></li>
             <li><a href="#work" class="neon-link">>_Work</a></li>
-            <li><a href="#data-science" class="neon-link">>_Data_Science</a></li>
+            <li><a href="credit-card.html">SQL Project</a></li>
             <li><a href="#quotes" class="neon-link">>_Quotes</a></li>
             <li><a href="#contact" class="neon-link scroll-trigger">>_Contact</a></li>
         </ul>
@@ -502,6 +502,32 @@ scraper.scrape_ratehub()
             // Initialize typing animation after a short delay
             setTimeout(typeTagline, 1000);
         });
+    </script>
+
+    <script>
+        document.getElementById('credit-card-nav-button').addEventListener('click', function() {
+            fetch('credit-card.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('content-container').innerHTML = html;
+                    // Initialize any scripts needed for the credit card section
+                    showRewardsAnalytics();
+                });
+        });
+    </script>
+
+    <button id="credit-card-tab-button" onclick="showTab('credit-card-content')">Credit Card Rewards</button>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show the selected section
+            document.getElementById(tabId).style.display = 'block';
+        }
     </script>
 </body>
 </html>

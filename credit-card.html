@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberRewards Optimizer</title>
+    <!-- Include your main CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Plotly.js for visualizations -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <section id="sql-project" class="data-science-section reveal-on-scroll">
+        <h2 class="glitch" data-text="CyberRewards Optimizer">CyberRewards Optimizer</h2>
+        
+        <div class="project-container">
+            <div class="data-project-card">
+                <h3>Credit Card Rewards Analysis System</h3>
+                <div class="project-content">
+                    <div class="feature-list">
+                        <h4>Key Features:</h4>
+                        <ul>
+                            <li><i class="fas fa-credit-card"></i> <span>Multi-Card Reward Comparison</span></li>
+                            <li><i class="fas fa-chart-line"></i> <span>Spending Pattern Analysis</span></li>
+                            <li><i class="fas fa-percentage"></i> <span>Cashback Optimization</span></li>
+                            <li><i class="fas fa-plane"></i> <span>Travel Points Maximizer</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visualization-container">
+                        <div id="rewards-category-plot" class="plot-box"></div>
+                        <div id="optimal-card-plot" class="plot-box"></div>
+                    </div>
+                    
+                    <div class="code-preview">
+                        <h4>Rewards Optimization SQL:</h4>
+                        <pre><code>
+<span class="comment">/* Advanced credit card rewards optimization query */</span>
+<span class="keyword">WITH</span> user_spending <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> 
+        category,
+        <span class="keyword">SUM</span>(amount) <span class="keyword">AS</span> total_spent,
+        <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> transaction_count,
+        <span class="keyword">AVG</span>(amount) <span class="keyword">AS</span> avg_transaction_size
+    <span class="keyword">FROM</span> user_transactions
+    <span class="keyword">WHERE</span> user_id = 1042
+    <span class="keyword">AND</span> transaction_date >= <span class="keyword">CURRENT_DATE</span> - <span class="keyword">INTERVAL</span> <span class="string">'12 months'</span>
+    <span class="keyword">GROUP BY</span> category
+),
+card_rewards <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span>
+        c.card_id,
+        c.card_name,
+        c.annual_fee,
+        cr.category,
+        cr.reward_rate,
+        cr.reward_type,
+        cr.points_multiplier,
+        c.signup_bonus,
+        c.signup_bonus_spend,
+        c.foreign_transaction_fee
+    <span class="keyword">FROM</span> credit_cards c
+    <span class="keyword">JOIN</span> card_rewards cr <span class="keyword">ON</span> c.card_id = cr.card_id
+    <span class="keyword">WHERE</span> c.is_active = <span class="keyword">TRUE</span>
+),
+potential_rewards <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span>
+        us.category,
+        us.total_spent,
+        cr.card_id,
+        cr.card_name,
+        cr.reward_type,
+        cr.annual_fee,
+        <span class="keyword">CASE WHEN</span> cr.reward_type = <span class="string">'CASHBACK'</span> <span class="keyword">THEN</span>
+            us.total_spent * cr.reward_rate
+        <span class="keyword">WHEN</span> cr.reward_type = <span class="string">'POINTS'</span> <span class="keyword">THEN</span>
+            us.total_spent * cr.points_multiplier
+        <span class="keyword">END</span> <span class="keyword">AS</span> reward_value,
+        <span class="keyword">ROW_NUMBER</span>() <span class="keyword">OVER</span> (
+            <span class="keyword">PARTITION BY</span> us.category 
+            <span class="keyword">ORDER BY</span> 
+                <span class="keyword">CASE WHEN</span> cr.reward_type = <span class="string">'CASHBACK'</span> <span class="keyword">THEN</span>
+                    us.total_spent * cr.reward_rate
+                <span class="keyword">WHEN</span> cr.reward_type = <span class="string">'POINTS'</span> <span class="keyword">THEN</span>
+                    us.total_spent * cr.points_multiplier
+                <span class="keyword">END</span> <span class="keyword">DESC</span>
+        ) <span class="keyword">AS</span> category_rank
+    <span class="keyword">FROM</span> user_spending us
+    <span class="keyword">JOIN</span> card_rewards cr <span class="keyword">ON</span> us.category = cr.category
+),
+optimal_cards <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span>
+        pr.category,
+        pr.total_spent,
+        pr.card_id,
+        pr.card_name,
+        pr.reward_type,
+        pr.reward_value,
+        pr.annual_fee,
+        <span class="keyword">ROUND</span>((pr.reward_value - 
+            <span class="keyword">CASE WHEN</span> pr.category_rank = 1 <span class="keyword">THEN</span> pr.annual_fee <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>
+        )::numeric, 2) <span class="keyword">AS</span> net_reward_value
+    <span class="keyword">FROM</span> potential_rewards pr
+    <span class="keyword">WHERE</span> pr.category_rank = 1
+)
+
+<span class="keyword">SELECT</span> 
+    oc.category,
+    oc.total_spent,
+    oc.card_name <span class="keyword">AS</span> recommended_card,
+    oc.reward_type,
+    oc.reward_value,
+    oc.annual_fee,
+    oc.net_reward_value,
+    <span class="keyword">ROUND</span>((oc.reward_value / oc.total_spent * 100)::numeric, 2) <span class="keyword">AS</span> effective_rate,
+    <span class="keyword">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER BY</span> oc.net_reward_value <span class="keyword">DESC</span>) <span class="keyword">AS</span> overall_rank
+<span class="keyword">FROM</span> optimal_cards oc
+<span class="keyword">ORDER BY</span> net_reward_value <span class="keyword">DESC</span>;
+                        </code></pre>
+                    </div>
+                </div>
+                
+                <div class="project-actions">
+                    <button class="cyber-button" onclick="window.location.href='https://github.com/yourusername/cyberrewards-optimizer'">
+                        <span class="button-text">VIEW_SOURCE</span>
+                    </button>
+                    <button class="cyber-button" onclick="showRewardsAnalytics()">
+                        <span class="button-text">RUN_DEMO</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credit Card Rewards Analytics Visualization Script -->
+    <script>
+        function showRewardsAnalytics() {
+            // Create rewards by category visualization
+            const categoryData = [{
+                type: 'bar',
+                x: ['Dining', 'Groceries', 'Travel', 'Gas', 'Entertainment', 'Online Shopping', 'Utilities'],
+                y: [156.80, 225.40, 380.25, 94.50, 120.75, 210.30, 45.60],
+                marker: {
+                    color: ['#ff3366', '#33ff99', '#00ccff', '#ffcc00', '#cc99ff', '#ff9966', '#66ff66'],
+                    line: {
+                        color: '#00ffff',
+                        width: 1.5
+                    }
+                },
+                text: ['$156.80', '$225.40', '$380.25', '$94.50', '$120.75', '$210.30', '$45.60'],
+                textposition: 'auto',
+                hoverinfo: 'x+text'
+            }];
+            
+            const categoryLayout = {
+                title: 'Annual Rewards by Spending Category',
+                xaxis: {
+                    title: 'Category'
+                },
+                yaxis: {
+                    title: 'Reward Value ($)',
+                    showgrid: true,
+                    gridcolor: 'rgba(0,255,255,0.1)'
+                },
+                font: {
+                    family: 'Ubuntu Mono, monospace',
+                    color: '#00ffff'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0.7)',
+                plot_bgcolor: 'rgba(0,0,0,0.7)',
+                margin: { t: 50, l: 70, b: 100, r: 30 }
+            };
+            
+            Plotly.newPlot('rewards-category-plot', categoryData, categoryLayout);
+            
+            // Create optimal card by category visualization
+            const cardData = [{
+                type: 'heatmap',
+                z: [
+                    [4.5, 1.5, 1.0, 1.0, 1.0, 2.0, 1.0],
+                    [3.0, 5.0, 1.0, 2.0, 1.0, 1.5, 1.0],
+                    [2.0, 1.0, 3.0, 4.0, 1.0, 1.0, 1.0],
+                    [1.0, 2.0, 2.0, 1.0, 4.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0, 1.0, 5.0, 2.0]
+                ],
+                x: ['Dining', 'Groceries', 'Travel', 'Gas', 'Entertainment', 'Online', 'Utilities'],
+                y: ['Neo Sapphire', 'EverGreen Plus', 'TravelQuest Pro', 'FuelRewards Elite', 'CyberShop Prime'],
+                colorscale: [
+                    [0, '#001a33'],
+                    [0.2, '#003366'],
+                    [0.4, '#0066cc'],
+                    [0.6, '#00ccff'],
+                    [0.8, '#33ffcc'],
+                    [1, '#00ff99']
+                ],
+                showscale: true,
+                colorbar: {
+                    title: 'Reward %',
+                    titleside: 'right'
+                }
+            }];
+            
+            const cardLayout = {
+                title: 'Optimal Card by Category (Reward %)',
+                xaxis: {
+                    title: 'Spending Category'
+                },
+                yaxis: {
+                    title: 'Credit Card'
+                },
+                font: {
+                    family: 'Ubuntu Mono, monospace',
+                    color: '#00ffff'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0.7)',
+                plot_bgcolor: 'rgba(0,0,0,0.7)',
+                margin: { t: 50, l: 120, b: 70, r: 30 }
+            };
+            
+            Plotly.newPlot('optimal-card-plot', cardData, cardLayout);
+            
+            // Add cyber animation effects
+            document.querySelectorAll('.plot-box').forEach(plot => {
+                plot.classList.add('active');
+                // Add glitch effect
+                setTimeout(() => {
+                    plot.classList.add('glitch-effect');
+                    setTimeout(() => plot.classList.remove('glitch-effect'), 500);
+                }, 300);
+            });
+            
+            // Add annotation for optimal strategy
+            const optimalStrategyMsg = {
+                x: 0.5,
+                y: -0.15,
+                xref: 'paper',
+                yref: 'paper',
+                text: '← Optimal Strategy: Use Neo Sapphire for dining, EverGreen Plus for groceries, TravelQuest Pro for travel →',
+                showarrow: false,
+                font: {
+                    family: 'Ubuntu Mono, monospace',
+                    size: 12,
+                    color: '#00ff99'
+                },
+                bgcolor: 'rgba(0,0,0,0.7)',
+                bordercolor: '#00ffff',
+                borderwidth: 1,
+                borderpad: 4
+            };
+            
+            Plotly.relayout('optimal-card-plot', {annotations: [optimalStrategyMsg]});
+        }
+        
+        // Optional: Auto-initialize the visualization when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can either auto-run the visualization or wait for button click
+            // showRewardsAnalytics();
+        });
+    </script>
+
+    <!-- Add some CSS specific to this page -->
+    <style>
+        /* These styles will add to or override your main CSS */
+        .plot-box {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        
+        .plot-box.active {
+            opacity: 1;
+        }
+        
+        .glitch-effect {
+            animation: glitch 0.3s linear;
+        }
+        
+        @keyframes glitch {
+            0% { opacity: 1; transform: translateX(0); }
+            25% { opacity: 0.8; transform: translateX(-5px); }
+            50% { opacity: 0.9; transform: translateX(5px); }
+            75% { opacity: 0.8; transform: translateX(-2px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        
+        .code-preview {
+            margin-top: 25px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            overflow-x: auto;
+        }
+        
+        .code-preview pre {
+            margin: 0;
+        }
+        
+        .code-preview code {
+            font-family: 'Ubuntu Mono', monospace;
+            line-height: 1.5;
+        }
+        
+        .code-preview .keyword {
+            color: #ff3366;
+            font-weight: bold;
+        }
+        
+        .code-preview .string {
+            color: #33ff99;
+        }
+        
+        .code-preview .comment {
+            color: #0099cc;
+            font-style: italic;
+        }
+    </style>
+</body>
+</html> 
