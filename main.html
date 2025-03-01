@@ -17,7 +17,7 @@
     
     <header class="cyber-header">
         <h1 class="glitch" data-text="DAVID_JIA">DAVID_JIA</h1>
-        <p class="cyber-tagline">// Full-Stack Dev - Data Scientist</p>
+        <p class="cyber-tagline" data-text="// Full-Stack Dev - Data Scientist"></p>
     </header>
     
     <nav class="cyber-nav">
@@ -414,6 +414,93 @@ scraper.scrape_ratehub()
                 const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
                 progressBar.style.transform = `scaleX(${scrolled / 100})`;
             });
+        });
+    </script>
+
+    <!-- Add this script before the closing body tag -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Typing animation with glitch effect for tagline
+            function typeTagline() {
+                const tagline = document.querySelector('.cyber-tagline');
+                const fullText = tagline.getAttribute('data-text');
+                let currentIndex = 0;
+                let glitchActive = false;
+                
+                function typeNextChar() {
+                    if (currentIndex <= fullText.length) {
+                        // Add random glitch effect (15% chance)
+                        if (Math.random() < 0.15 && !glitchActive && currentIndex > 0) {
+                            applyGlitch(fullText.substring(0, currentIndex));
+                            return;
+                        }
+                        
+                        // Normal typing
+                        tagline.textContent = fullText.substring(0, currentIndex);
+                        currentIndex++;
+                        setTimeout(typeNextChar, 30 + Math.random() * 50); // Faster typing speed
+                    } else {
+                        // Start continuous glitching after typing is complete
+                        startContinuousGlitch();
+                    }
+                }
+                
+                function applyGlitch(correctText) {
+                    glitchActive = true;
+                    
+                    // Create glitched version (random chars, reversed segments, etc.)
+                    let glitchedText = correctText;
+                    const glitchType = Math.floor(Math.random() * 3);
+                    
+                    if (glitchType === 0) {
+                        // Replace random characters
+                        glitchedText = correctText.split('').map(char => 
+                            Math.random() < 0.3 ? '_@#%!&*'.charAt(Math.floor(Math.random() * 7)) : char
+                        ).join('');
+                    } else if (glitchType === 1) {
+                        // Duplicate segment
+                        const lastChar = correctText.charAt(correctText.length - 1);
+                        glitchedText = correctText + lastChar.repeat(Math.floor(Math.random() * 3) + 1);
+                    } else {
+                        // Shift character positions
+                        const chars = correctText.split('');
+                        const pos1 = Math.floor(Math.random() * chars.length);
+                        const pos2 = Math.floor(Math.random() * chars.length);
+                        [chars[pos1], chars[pos2]] = [chars[pos2], chars[pos1]];
+                        glitchedText = chars.join('');
+                    }
+                    
+                    // Apply glitch
+                    tagline.textContent = glitchedText;
+                    
+                    // Restore correct text after a short delay
+                    setTimeout(() => {
+                        tagline.textContent = correctText;
+                        glitchActive = false;
+                        
+                        if (currentIndex <= fullText.length) {
+                            setTimeout(typeNextChar, 30 + Math.random() * 50);
+                        }
+                    }, 100 + Math.random() * 150);
+                }
+                
+                function startContinuousGlitch() {
+                    // Periodically glitch the completed text
+                    setInterval(() => {
+                        if (!glitchActive && Math.random() < 0.6) { // 30% chance of glitching (increased from 20%)
+                            applyGlitch(fullText);
+                        }
+                    }, 700); // Check every 1 second (reduced from 2 seconds)
+                }
+                
+                // Start typing animation
+                typeNextChar();
+            }
+            
+            // Initialize typing animation after a short delay
+            setTimeout(typeTagline, 1000);
         });
     </script>
 </body>
