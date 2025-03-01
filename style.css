@@ -770,3 +770,181 @@ body {
     50% { transform: translateX(-2px); opacity: 0.7; }
     75% { transform: translateX(2px); opacity: 0.3; }
 }
+
+/* Apple-style Scroll Reveal Animation */
+.reveal-section {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-section.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered reveal for child elements */
+.reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--reveal-index, 0) * 0.25s);
+    will-change: opacity, transform;
+}
+
+.reveal-stagger.revealed > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Fade in from left animation */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-80px);
+    transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Fade in from right animation */
+.reveal-right {
+    opacity: 0;
+    transform: translateX(80px);
+    transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Scale reveal animation */
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Parallax scroll effect */
+.parallax-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.parallax-element {
+    will-change: transform;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sticky section for Apple-style product reveals */
+.sticky-section {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.sticky-content {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sticky-content.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Cyberpunk-themed progress indicator */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    z-index: 1000;
+    width: 0%;
+    transition: width 0.2s ease;
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* Cyberpunk reveal effect with glitch */
+.cyber-reveal {
+    opacity: 0;
+    transform: translateY(50px) skew(-5deg);
+    transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    will-change: opacity, transform;
+}
+
+.cyber-reveal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.8s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.cyber-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0) skew(-5deg);
+}
+
+.cyber-reveal.revealed::before {
+    animation: cyber-reveal-glitch 0.8s forwards;
+}
+
+@keyframes cyber-reveal-glitch {
+    0% {
+        opacity: 0.5;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    20% {
+        opacity: 0.8;
+        clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+    }
+    40% {
+        opacity: 0.6;
+        clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+    }
+    60% {
+        opacity: 0.2;
+        clip-path: polygon(0 0, 90% 10%, 100% 100%, 10% 90%);
+    }
+    80% {
+        opacity: 0.1;
+        clip-path: polygon(10% 0, 100% 10%, 90% 100%, 0 90%);
+    }
+    100% {
+        opacity: 0;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}

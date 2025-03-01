@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Reveal Demo | Cyberpunk Style</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="scroll-reveal.js"></script>
+    <style>
+        .demo-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--neon-cyan);
+        }
+        
+        .demo-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--neon-cyan);
+        }
+        
+        .demo-content {
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .demo-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-pink);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .demo-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--cyber-dark), #001428);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: var(--terminal-green);
+        }
+        
+        .sticky-demo {
+            height: 300vh;
+            position: relative;
+        }
+        
+        .sticky-container {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .sticky-item {
+            width: 80%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            background: var(--cyber-dark);
+            border: 2px solid var(--neon-cyan);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 1s ease, opacity 1s ease;
+        }
+        
+        .sticky-item.revealed {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .parallax-demo {
+            height: 150vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .parallax-item {
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-cyan);
+            margin: 1rem;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    
+    <header class="cyber-header">
+        <h1 class="glitch" data-text="SCROLL_REVEAL">SCROLL_REVEAL</h1>
+        <p class="cyber-tagline">// Apple-style animations with a cyberpunk twist</p>
+    </header>
+    
+    <nav class="cyber-nav">
+        <ul>
+            <li><a href="#basic" class="neon-link">>_Basic_Reveal</a></li>
+            <li><a href="#staggered" class="neon-link">>_Staggered</a></li>
+            <li><a href="#directional" class="neon-link">>_Directional</a></li>
+            <li><a href="#sticky" class="neon-link">>_Sticky</a></li>
+            <li><a href="#parallax" class="neon-link">>_Parallax</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro" class="demo-section">
+            <h2 class="demo-title">Scroll Down to See the Effects</h2>
+            <div class="demo-content">
+                <p>This demo showcases various scroll reveal animations inspired by Apple's website design but with a cyberpunk aesthetic. As you scroll down, elements will reveal themselves with smooth animations and occasional glitch effects.</p>
+            </div>
+        </section>
+
+        <section id="basic" class="demo-section reveal-section">
+            <h2 class="demo-title">Basic Reveal Animation</h2>
+            <div class="demo-content">
+                <p>This section uses the basic fade-in and slide-up animation. Elements start invisible and slightly below their final position, then animate into view as you scroll to them.</p>
+            </div>
+        </section>
+
+        <section id="staggered" class="demo-section">
+            <h2 class="demo-title">Staggered Reveal Animation</h2>
+            <div class="demo-grid reveal-stagger">
+                <div class="demo-card">
+                    <div class="demo-image">01</div>
+                    <h3>First Card</h3>
+                    <p>This card appears first in the staggered sequence.</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-image">02</div>
+                    <h3>Second Card</h3>
+                    <p>This card appears after a slight delay.</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-image">03</div>
+                    <h3>Third Card</h3>
+                    <p>This card appears with an even longer delay.</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-image">04</div>
+                    <h3>Fourth Card</h3>
+                    <p>This card appears last in the sequence.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="directional" class="demo-section">
+            <h2 class="demo-title">Directional Reveals</h2>
+            <div class="demo-grid">
+                <div class="demo-card reveal-left">
+                    <div class="demo-image"><i class="fas fa-arrow-right"></i></div>
+                    <h3>From Left</h3>
+                    <p>This element slides in from the left.</p>
+                </div>
+                <div class="demo-card reveal-right">
+                    <div class="demo-image"><i class="fas fa-arrow-left"></i></div>
+                    <h3>From Right</h3>
+                    <p>This element slides in from the right.</p>
+                </div>
+                <div class="demo-card reveal-scale">
+                    <div class="demo-image"><i class="fas fa-expand-alt"></i></div>
+                    <h3>Scale Up</h3>
+                    <p>This element scales up from 90% to 100%.</p>
+                </div>
+                <div class="demo-card cyber-reveal">
+                    <div class="demo-image"><i class="fas fa-bolt"></i></div>
+                    <h3>Cyber Glitch</h3>
+                    <p>This element has a cyberpunk glitch effect.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="sticky" class="demo-section">
+            <h2 class="demo-title">Sticky Scroll Effect</h2>
+            <p>Scroll down to see the sticky effect in action.</p>
+            
+            <div class="sticky-demo">
+                <div class="sticky-container">
+                    <div class="sticky-item sticky-content">
+                        <p>This element stays fixed while you scroll, similar to Apple's product reveals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="parallax" class="demo-section">
+            <h2 class="demo-title">Parallax Effect</h2>
+            <p>Elements move at different speeds as you scroll.</p>
+            
+            <div class="parallax-container" style="height: 80vh; position: relative; overflow: hidden;">
+                <div class="parallax-element" data-parallax-speed="0.1" style="position: absolute; top: 20%; left: 10%;">
+                    <div class="parallax-item">Slow Moving Element</div>
+                </div>
+                <div class="parallax-element" data-parallax-speed="0.3" style="position: absolute; top: 40%; left: 50%;">
+                    <div class="parallax-item">Medium Speed Element</div>
+                </div>
+                <div class="parallax-element" data-parallax-speed="0.5" style="position: absolute; top: 60%; left: 30%;">
+                    <div class="parallax-item">Fast Moving Element</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="contact-section">
+        <div class="contact-container">
+            <p>This demo showcases Apple-style scroll reveal animations with a cyberpunk aesthetic for your website.</p>
+        </div>
+    </footer>
+</body>
+</html> 
