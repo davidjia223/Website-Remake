@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberRewards Optimizer</title>
+    <title>Canadian Credit Card Analyzer</title>
     <!-- Include your main CSS -->
     <link rel="stylesheet" href="css/styles.css">
     <!-- Font Awesome for icons -->
@@ -13,156 +13,268 @@
 </head>
 <body>
     <section id="sql-project" class="data-science-section reveal-on-scroll">
-        <h2 class="glitch" data-text="CyberRewards Optimizer">CyberRewards Optimizer</h2>
+        <h2 class="glitch" data-text="NEO//CANADA">NEO//CANADA</h2>
+        <h3 class="cyber-subtitle">Credit Card Rewards Analyzer</h3>
         
         <div class="project-container">
             <div class="data-project-card">
-                <h3>Credit Card Rewards Analysis System</h3>
+                <h3>Canadian Credit Card Intelligence System</h3>
                 <div class="project-content">
                     <div class="feature-list">
                         <h4>Key Features:</h4>
                         <ul>
-                            <li><i class="fas fa-credit-card"></i> <span>Multi-Card Reward Comparison</span></li>
-                            <li><i class="fas fa-chart-line"></i> <span>Spending Pattern Analysis</span></li>
-                            <li><i class="fas fa-percentage"></i> <span>Cashback Optimization</span></li>
-                            <li><i class="fas fa-plane"></i> <span>Travel Points Maximizer</span></li>
+                            <li><i class="fas fa-leaf"></i> <span>TD/RBC/CIBC/Scotiabank Card Analysis</span></li>
+                            <li><i class="fas fa-plane"></i> <span>Aeroplan & Air Miles Point Valuation</span></li>
+                            <li><i class="fas fa-snowflake"></i> <span>Provincial Tax Benefit Calculator</span></li>
+                            <li><i class="fas fa-credit-card"></i> <span>FX Fee Optimization for Travelers</span></li>
                         </ul>
                     </div>
                     
+                    <div class="interactive-panel">
+                        <h4>Card Comparison Matrix</h4>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="annual-income">Annual Income (CAD)</label>
+                                <input type="range" id="annual-income" min="30000" max="150000" step="10000" value="60000">
+                                <output for="annual-income">$60,000</output>
+                            </div>
+                            <div class="input-group">
+                                <label for="province">Province</label>
+                                <select id="province">
+                                    <option value="ON">Ontario</option>
+                                    <option value="BC">British Columbia</option>
+                                    <option value="AB">Alberta</option>
+                                    <option value="QC">Quebec</option>
+                                    <option value="MB">Manitoba</option>
+                                    <option value="NS">Nova Scotia</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Monthly Spending ($)</label>
+                                <div class="spending-inputs">
+                                    <div>
+                                        <label for="groceries">Groceries</label>
+                                        <input type="number" id="groceries" value="500" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="dining">Dining</label>
+                                        <input type="number" id="dining" value="300" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="gas">Gas</label>
+                                        <input type="number" id="gas" value="200" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="travel">Travel</label>
+                                        <input type="number" id="travel" value="150" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="recurring">Recurring</label>
+                                        <input type="number" id="recurring" value="250" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Preferences</label>
+                                <div class="preference-toggles">
+                                    <div>
+                                        <input type="checkbox" id="welcome-bonus" checked>
+                                        <label for="welcome-bonus">Include Welcome Bonus</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="travel-rewards" checked>
+                                        <label for="travel-rewards">Value Travel Rewards</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="no-fee" checked>
+                                        <label for="no-fee">Consider No-Fee Cards</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="cyber-button" onclick="analyzeCards()">
+                            <span class="button-text">ANALYZE_CARDS</span>
+                        </button>
+                    </div>
+                    
                     <div class="visualization-container">
-                        <div id="rewards-category-plot" class="plot-box"></div>
-                        <div id="optimal-card-plot" class="plot-box"></div>
+                        <div id="top-cards-plot" class="plot-box"></div>
+                        <div id="value-breakdown-plot" class="plot-box"></div>
                     </div>
                     
                     <div class="code-preview">
-                        <h4>Rewards Optimization SQL:</h4>
+                        <h4>Canadian Credit Card SQL Query:</h4>
                         <pre><code>
-<span class="comment">/* Advanced credit card rewards optimization query */</span>
-<span class="keyword">WITH</span> user_spending <span class="keyword">AS</span> (
-    <span class="keyword">SELECT</span> 
-        category,
-        <span class="keyword">SUM</span>(amount) <span class="keyword">AS</span> total_spent,
-        <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> transaction_count,
-        <span class="keyword">AVG</span>(amount) <span class="keyword">AS</span> avg_transaction_size
-    <span class="keyword">FROM</span> user_transactions
-    <span class="keyword">WHERE</span> user_id = 1042
-    <span class="keyword">AND</span> transaction_date >= <span class="keyword">CURRENT_DATE</span> - <span class="keyword">INTERVAL</span> <span class="string">'12 months'</span>
-    <span class="keyword">GROUP BY</span> category
-),
-card_rewards <span class="keyword">AS</span> (
+<span class="comment">/* Canadian credit card rewards value analysis */</span>
+<span class="keyword">WITH</span> card_base <span class="keyword">AS</span> (
     <span class="keyword">SELECT</span>
-        c.card_id,
-        c.card_name,
-        c.annual_fee,
-        cr.category,
-        cr.reward_rate,
-        cr.reward_type,
-        cr.points_multiplier,
-        c.signup_bonus,
-        c.signup_bonus_spend,
-        c.foreign_transaction_fee
-    <span class="keyword">FROM</span> credit_cards c
-    <span class="keyword">JOIN</span> card_rewards cr <span class="keyword">ON</span> c.card_id = cr.card_id
-    <span class="keyword">WHERE</span> c.is_active = <span class="keyword">TRUE</span>
+        card_id,
+        card_name,
+        issuer,
+        annual_fee,
+        income_requirement,
+        <span class="keyword">CASE WHEN</span> province = 'QC' <span class="keyword">THEN</span> 
+            welcome_bonus_non_quebec 
+        <span class="keyword">ELSE</span> 
+            welcome_bonus 
+        <span class="keyword">END</span> <span class="keyword">AS</span> welcome_bonus,
+        <span class="keyword">CASE WHEN</span> foreign_transaction_fee = 0 <span class="keyword">THEN</span> 1 <span class="keyword">ELSE</span> 0 <span class="keyword">END</span> <span class="keyword">AS</span> no_fx_fee
+    <span class="keyword">FROM</span> canadian_credit_cards
+    <span class="keyword">WHERE</span> is_active = <span class="keyword">TRUE</span>
+    <span class="keyword">AND</span> (income_requirement <= :annual_income <span class="keyword">OR</span> income_requirement <span class="keyword">IS NULL</span>)
+    <span class="keyword">AND</span> (:no_fee_only = 0 <span class="keyword">OR</span> annual_fee = 0)
 ),
-potential_rewards <span class="keyword">AS</span> (
+reward_rates <span class="keyword">AS</span> (
     <span class="keyword">SELECT</span>
-        us.category,
-        us.total_spent,
-        cr.card_id,
-        cr.card_name,
-        cr.reward_type,
-        cr.annual_fee,
-        <span class="keyword">CASE WHEN</span> cr.reward_type = <span class="string">'CASHBACK'</span> <span class="keyword">THEN</span>
-            us.total_spent * cr.reward_rate
-        <span class="keyword">WHEN</span> cr.reward_type = <span class="string">'POINTS'</span> <span class="keyword">THEN</span>
-            us.total_spent * cr.points_multiplier
-        <span class="keyword">END</span> <span class="keyword">AS</span> reward_value,
-        <span class="keyword">ROW_NUMBER</span>() <span class="keyword">OVER</span> (
-            <span class="keyword">PARTITION BY</span> us.category 
-            <span class="keyword">ORDER BY</span> 
-                <span class="keyword">CASE WHEN</span> cr.reward_type = <span class="string">'CASHBACK'</span> <span class="keyword">THEN</span>
-                    us.total_spent * cr.reward_rate
-                <span class="keyword">WHEN</span> cr.reward_type = <span class="string">'POINTS'</span> <span class="keyword">THEN</span>
-                    us.total_spent * cr.points_multiplier
-                <span class="keyword">END</span> <span class="keyword">DESC</span>
-        ) <span class="keyword">AS</span> category_rank
-    <span class="keyword">FROM</span> user_spending us
-    <span class="keyword">JOIN</span> card_rewards cr <span class="keyword">ON</span> us.category = cr.category
+        card_id,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Groceries' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> grocery_rate,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Dining' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> dining_rate,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Gas' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> gas_rate,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Travel' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> travel_rate,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Recurring' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> recurring_rate,
+        <span class="keyword">MAX</span>(<span class="keyword">CASE WHEN</span> category = 'Other' <span class="keyword">THEN</span> reward_rate <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>) <span class="keyword">AS</span> other_rate,
+        reward_type,
+        point_value
+    <span class="keyword">FROM</span> card_reward_rates
+    <span class="keyword">GROUP BY</span> card_id, reward_type, point_value
 ),
-optimal_cards <span class="keyword">AS</span> (
+user_spending <span class="keyword">AS</span> (
     <span class="keyword">SELECT</span>
-        pr.category,
-        pr.total_spent,
-        pr.card_id,
-        pr.card_name,
-        pr.reward_type,
-        pr.reward_value,
-        pr.annual_fee,
-        <span class="keyword">ROUND</span>((pr.reward_value - 
-            <span class="keyword">CASE WHEN</span> pr.category_rank = 1 <span class="keyword">THEN</span> pr.annual_fee <span class="keyword">ELSE</span> 0 <span class="keyword">END</span>
-        )::numeric, 2) <span class="keyword">AS</span> net_reward_value
-    <span class="keyword">FROM</span> potential_rewards pr
-    <span class="keyword">WHERE</span> pr.category_rank = 1
+        :groceries <span class="keyword">AS</span> groceries,
+        :dining <span class="keyword">AS</span> dining,
+        :gas <span class="keyword">AS</span> gas,
+        :travel <span class="keyword">AS</span> travel,
+        :recurring <span class="keyword">AS</span> recurring,
+        :other <span class="keyword">AS</span> other,
+        :groceries + :dining + :gas + :travel + :recurring + :other <span class="keyword">AS</span> monthly_total,
+        (:groceries + :dining + :gas + :travel + :recurring + :other) * 12 <span class="keyword">AS</span> annual_total
+),
+reward_value <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span>
+        cb.card_id,
+        cb.card_name,
+        cb.issuer,
+        cb.annual_fee,
+        <span class="keyword">CASE WHEN</span> :include_welcome_bonus = 1 <span class="keyword">THEN</span> cb.welcome_bonus <span class="keyword">ELSE</span> 0 <span class="keyword">END</span> <span class="keyword">AS</span> welcome_bonus,
+        cb.no_fx_fee,
+        rr.reward_type,
+        rr.point_value,
+        us.monthly_total,
+        us.annual_total,
+        (us.groceries * 12 * rr.grocery_rate * rr.point_value) +
+        (us.dining * 12 * rr.dining_rate * rr.point_value) +
+        (us.gas * 12 * rr.gas_rate * rr.point_value) +
+        (us.travel * 12 * rr.travel_rate * rr.point_value) +
+        (us.recurring * 12 * rr.recurring_rate * rr.point_value) +
+        (us.other * 12 * rr.other_rate * rr.point_value) <span class="keyword">AS</span> annual_rewards,
+        <span class="keyword">CASE WHEN</span> :travel_value = 1 <span class="keyword">AND</span> rr.reward_type = 'Travel' <span class="keyword">THEN</span>
+            (us.travel * 12 * 0.015) <span class="comment">/* Extra 1.5% value for travel-specific cards when user values travel */</span>
+        <span class="keyword">ELSE</span> 0 <span class="keyword">END</span> <span class="keyword">AS</span> travel_premium,
+        <span class="keyword">CASE WHEN</span> cb.no_fx_fee = 1 <span class="keyword">THEN</span>
+            (us.travel * 12 * 0.025) <span class="comment">/* 2.5% savings on foreign transactions for no-FX-fee cards */</span>
+        <span class="keyword">ELSE</span> 0 <span class="keyword">END</span> <span class="keyword">AS</span> fx_fee_savings
+    <span class="keyword">FROM</span> card_base cb
+    <span class="keyword">JOIN</span> reward_rates rr <span class="keyword">ON</span> cb.card_id = rr.card_id
+    <span class="keyword">CROSS JOIN</span> user_spending us
 )
 
-<span class="keyword">SELECT</span> 
-    oc.category,
-    oc.total_spent,
-    oc.card_name <span class="keyword">AS</span> recommended_card,
-    oc.reward_type,
-    oc.reward_value,
-    oc.annual_fee,
-    oc.net_reward_value,
-    <span class="keyword">ROUND</span>((oc.reward_value / oc.total_spent * 100)::numeric, 2) <span class="keyword">AS</span> effective_rate,
-    <span class="keyword">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER BY</span> oc.net_reward_value <span class="keyword">DESC</span>) <span class="keyword">AS</span> overall_rank
-<span class="keyword">FROM</span> optimal_cards oc
-<span class="keyword">ORDER BY</span> net_reward_value <span class="keyword">DESC</span>;
+<span class="keyword">SELECT</span>
+    card_name,
+    issuer,
+    annual_fee,
+    reward_type,
+    annual_rewards,
+    welcome_bonus_value,
+    travel_premium,
+    fx_fee_savings,
+    annual_rewards + welcome_bonus_value + travel_premium + fx_fee_savings <span class="keyword">AS</span> total_value,
+    annual_rewards + welcome_bonus_value + travel_premium + fx_fee_savings - annual_fee <span class="keyword">AS</span> net_value,
+    <span class="keyword">ROUND</span>((annual_rewards / annual_total) * 100, 2) <span class="keyword">AS</span> effective_rate,
+    <span class="keyword">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER BY</span> (annual_rewards + welcome_bonus_value + travel_premium + fx_fee_savings - annual_fee) <span class="keyword">DESC</span>) <span class="keyword">AS</span> card_rank
+<span class="keyword">FROM</span> reward_value
+<span class="keyword">ORDER BY</span> net_value <span class="keyword">DESC</span>
+<span class="keyword">LIMIT</span> 10;
                         </code></pre>
                     </div>
                 </div>
                 
                 <div class="project-actions">
-                    <button class="cyber-button" onclick="window.location.href='https://github.com/yourusername/cyberrewards-optimizer'">
+                    <button class="cyber-button" onclick="window.location.href='https://github.com/yourusername/canadian-cc-analyzer'">
                         <span class="button-text">VIEW_SOURCE</span>
                     </button>
-                    <button class="cyber-button" onclick="showRewardsAnalytics()">
-                        <span class="button-text">RUN_DEMO</span>
+                    <button class="cyber-button" onclick="toggleAdvancedMode()">
+                        <span class="button-text">TOGGLE_ADVANCED_MODE</span>
                     </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Credit Card Rewards Analytics Visualization Script -->
+    <!-- Add JavaScript for interactive features -->
     <script>
-        function showRewardsAnalytics() {
-            // Create rewards by category visualization
-            const categoryData = [{
+        // Handle slider updates
+        document.getElementById('annual-income').addEventListener('input', function() {
+            document.querySelector('output[for="annual-income"]').textContent = `$${this.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        });
+        
+        // Card Analysis Function
+        function analyzeCards() {
+            // Get user inputs
+            const income = parseInt(document.getElementById('annual-income').value);
+            const province = document.getElementById('province').value;
+            const groceries = parseInt(document.getElementById('groceries').value);
+            const dining = parseInt(document.getElementById('dining').value);
+            const gas = parseInt(document.getElementById('gas').value);
+            const travel = parseInt(document.getElementById('travel').value);
+            const recurring = parseInt(document.getElementById('recurring').value);
+            
+            // Calculate total monthly spending
+            const monthlyTotal = groceries + dining + gas + travel + recurring;
+            
+            // Get top Canadian cards based on user profile
+            const topCards = getCanadianCards(income, province, groceries, dining, gas, travel, recurring);
+            
+            // Create first visualization - top 5 cards by net value
+            const topCardsData = [{
                 type: 'bar',
-                x: ['Dining', 'Groceries', 'Travel', 'Gas', 'Entertainment', 'Online Shopping', 'Utilities'],
-                y: [156.80, 225.40, 380.25, 94.50, 120.75, 210.30, 45.60],
+                x: topCards.map(card => card.netValue),
+                y: topCards.map(card => card.name),
+                orientation: 'h',
                 marker: {
-                    color: ['#ff3366', '#33ff99', '#00ccff', '#ffcc00', '#cc99ff', '#ff9966', '#66ff66'],
+                    color: ['#ff3366', '#33ff99', '#00ccff', '#ffcc00', '#cc99ff'],
                     line: {
                         color: '#00ffff',
                         width: 1.5
                     }
                 },
-                text: ['$156.80', '$225.40', '$380.25', '$94.50', '$120.75', '$210.30', '$45.60'],
-                textposition: 'auto',
-                hoverinfo: 'x+text'
+                text: topCards.map(card => `$${card.netValue.toFixed(2)}`),
+                textposition: 'outside',
+                hoverinfo: 'text',
+                hovertext: topCards.map(card => 
+                    `${card.name} (${card.issuer})<br>` +
+                    `Annual Fee: $${card.annualFee}<br>` +
+                    `Annual Value: $${card.totalValue.toFixed(2)}<br>` +
+                    `Net Value: $${card.netValue.toFixed(2)}<br>` +
+                    `Effective Rate: ${card.effectiveRate}%`
+                )
             }];
             
-            const categoryLayout = {
-                title: 'Annual Rewards by Spending Category',
+            const topCardsLayout = {
+                title: 'Top 5 Canadian Cards for Your Profile',
                 xaxis: {
-                    title: 'Category'
+                    title: 'Annual Net Value (CAD)',
+                    color: '#ffffff'
                 },
                 yaxis: {
-                    title: 'Reward Value ($)',
-                    showgrid: true,
-                    gridcolor: 'rgba(0,255,255,0.1)'
+                    title: '',
+                    color: '#ffffff'
+                },
+                margin: {
+                    l: 180,
+                    r: 40,
+                    t: 50,
+                    b: 80
                 },
                 font: {
                     family: 'Ubuntu Mono, monospace',
@@ -170,58 +282,83 @@ optimal_cards <span class="keyword">AS</span> (
                 },
                 paper_bgcolor: 'rgba(0,0,0,0.7)',
                 plot_bgcolor: 'rgba(0,0,0,0.7)',
-                margin: { t: 50, l: 70, b: 100, r: 30 }
+                annotations: [{
+                    x: 0.5,
+                    y: -0.2,
+                    xref: 'paper',
+                    yref: 'paper',
+                    text: `Based on $${monthlyTotal}/month spending in ${province} with $${income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} income`,
+                    showarrow: false,
+                    font: {
+                        family: 'Ubuntu Mono, monospace',
+                        size: 12,
+                        color: '#33ff99'
+                    }
+                }]
             };
             
-            Plotly.newPlot('rewards-category-plot', categoryData, categoryLayout);
+            Plotly.newPlot('top-cards-plot', topCardsData, topCardsLayout);
             
-            // Create optimal card by category visualization
-            const cardData = [{
-                type: 'heatmap',
-                z: [
-                    [4.5, 1.5, 1.0, 1.0, 1.0, 2.0, 1.0],
-                    [3.0, 5.0, 1.0, 2.0, 1.0, 1.5, 1.0],
-                    [2.0, 1.0, 3.0, 4.0, 1.0, 1.0, 1.0],
-                    [1.0, 2.0, 2.0, 1.0, 4.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0, 1.0, 5.0, 2.0]
+            // Create second visualization - Value breakdown for top card
+            const bestCard = topCards[0];
+            const valueBreakdownData = [{
+                type: 'pie',
+                values: [
+                    bestCard.rewardsValue, 
+                    bestCard.welcomeBonus,
+                    bestCard.travelValue,
+                    bestCard.fxValue,
+                    -bestCard.annualFee
                 ],
-                x: ['Dining', 'Groceries', 'Travel', 'Gas', 'Entertainment', 'Online', 'Utilities'],
-                y: ['Neo Sapphire', 'EverGreen Plus', 'TravelQuest Pro', 'FuelRewards Elite', 'CyberShop Prime'],
-                colorscale: [
-                    [0, '#001a33'],
-                    [0.2, '#003366'],
-                    [0.4, '#0066cc'],
-                    [0.6, '#00ccff'],
-                    [0.8, '#33ffcc'],
-                    [1, '#00ff99']
+                labels: [
+                    'Regular Rewards', 
+                    'Welcome Bonus',
+                    'Travel Benefits',
+                    'FX Fee Savings',
+                    'Annual Fee'
                 ],
-                showscale: true,
-                colorbar: {
-                    title: 'Reward %',
-                    titleside: 'right'
+                textinfo: 'label+value',
+                textposition: 'outside',
+                marker: {
+                    colors: ['#33ff99', '#00ccff', '#ffcc00', '#cc99ff', '#ff3366'],
+                    line: {
+                        color: '#00ffff',
+                        width: 1.5
+                    }
+                },
+                hole: 0.4
+            }];
+            
+            const valueBreakdownLayout = {
+                title: `Value Breakdown: ${bestCard.name}`,
+                annotations: [{
+                    font: {
+                        family: 'Ubuntu Mono, monospace',
+                        size: 14,
+                        color: '#ffffff'
+                    },
+                    showarrow: false,
+                    text: `Net: $${bestCard.netValue.toFixed(2)}`,
+                    x: 0.5,
+                    y: 0.5
+                }],
+                font: {
+                    family: 'Ubuntu Mono, monospace',
+                    color: '#00ffff'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0.7)',
+                plot_bgcolor: 'rgba(0,0,0,0.7)',
+                margin: {
+                    l: 20,
+                    r: 20,
+                    t: 50,
+                    b: 20
                 }
-            }];
-            
-            const cardLayout = {
-                title: 'Optimal Card by Category (Reward %)',
-                xaxis: {
-                    title: 'Spending Category'
-                },
-                yaxis: {
-                    title: 'Credit Card'
-                },
-                font: {
-                    family: 'Ubuntu Mono, monospace',
-                    color: '#00ffff'
-                },
-                paper_bgcolor: 'rgba(0,0,0,0.7)',
-                plot_bgcolor: 'rgba(0,0,0,0.7)',
-                margin: { t: 50, l: 120, b: 70, r: 30 }
             };
             
-            Plotly.newPlot('optimal-card-plot', cardData, cardLayout);
+            Plotly.newPlot('value-breakdown-plot', valueBreakdownData, valueBreakdownLayout);
             
-            // Add cyber animation effects
+            // Add animation effects
             document.querySelectorAll('.plot-box').forEach(plot => {
                 plot.classList.add('active');
                 // Add glitch effect
@@ -230,39 +367,138 @@ optimal_cards <span class="keyword">AS</span> (
                     setTimeout(() => plot.classList.remove('glitch-effect'), 500);
                 }, 300);
             });
-            
-            // Add annotation for optimal strategy
-            const optimalStrategyMsg = {
-                x: 0.5,
-                y: -0.15,
-                xref: 'paper',
-                yref: 'paper',
-                text: '← Optimal Strategy: Use Neo Sapphire for dining, EverGreen Plus for groceries, TravelQuest Pro for travel →',
-                showarrow: false,
-                font: {
-                    family: 'Ubuntu Mono, monospace',
-                    size: 12,
-                    color: '#00ff99'
-                },
-                bgcolor: 'rgba(0,0,0,0.7)',
-                bordercolor: '#00ffff',
-                borderwidth: 1,
-                borderpad: 4
-            };
-            
-            Plotly.relayout('optimal-card-plot', {annotations: [optimalStrategyMsg]});
         }
         
-        // Optional: Auto-initialize the visualization when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // You can either auto-run the visualization or wait for button click
-            // showRewardsAnalytics();
-        });
+        // Toggle advanced mode
+        function toggleAdvancedMode() {
+            document.querySelector('.interactive-panel').classList.toggle('advanced-mode');
+            // Add additional controls in advanced mode
+            if (document.querySelector('.interactive-panel').classList.contains('advanced-mode')) {
+                // Add advanced controls here
+                const advancedControls = document.createElement('div');
+                advancedControls.className = 'advanced-controls';
+                advancedControls.innerHTML = `
+                    <h4>Advanced Parameters</h4>
+                    <div class="advanced-grid">
+                        <div class="input-group">
+                            <label for="aeroplan-value">Aeroplan Point Value (¢)</label>
+                            <input type="range" id="aeroplan-value" min="1.0" max="3.0" step="0.1" value="2.1">
+                            <output for="aeroplan-value">2.1¢</output>
+                        </div>
+                        <div class="input-group">
+                            <label for="airmiles-value">Air Miles Value (¢)</label>
+                            <input type="range" id="airmiles-value" min="10" max="20" step="0.5" value="13.5">
+                            <output for="airmiles-value">13.5¢</output>
+                        </div>
+                        <div class="input-group">
+                            <label for="mrpc-value">Membership Rewards Value (¢)</label>
+                            <input type="range" id="mrpc-value" min="1.5" max="2.5" step="0.1" value="2.0">
+                            <output for="mrpc-value">2.0¢</output>
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.interactive-panel').appendChild(advancedControls);
+                
+                // Add event listeners for new sliders
+                document.getElementById('aeroplan-value').addEventListener('input', function() {
+                    document.querySelector('output[for="aeroplan-value"]').textContent = `${this.value}¢`;
+                });
+                document.getElementById('airmiles-value').addEventListener('input', function() {
+                    document.querySelector('output[for="airmiles-value"]').textContent = `${this.value}¢`;
+                });
+                document.getElementById('mrpc-value').addEventListener('input', function() {
+                    document.querySelector('output[for="mrpc-value"]').textContent = `${this.value}¢`;
+                });
+            } else {
+                // Remove advanced controls
+                const advancedControls = document.querySelector('.advanced-controls');
+                if (advancedControls) {
+                    advancedControls.remove();
+                }
+            }
+        }
+        
+        // Sample data function for Canadian cards
+        function getCanadianCards(income, province, groceries, dining, gas, travel, recurring) {
+            // This would be replaced with actual data from a database
+            // For demo purposes, we'll return sample data
+            return [
+                {
+                    name: 'Scotiabank Passport™ Visa Infinite*',
+                    issuer: 'Scotiabank',
+                    annualFee: 139,
+                    rewardsValue: 423.12,
+                    welcomeBonus: 300,
+                    travelValue: 89.50,
+                    fxValue: 60.00,
+                    totalValue: 872.62,
+                    netValue: 733.62,
+                    effectiveRate: 2.84
+                },
+                {
+                    name: 'CIBC Dividend® Visa Infinite*',
+                    issuer: 'CIBC',
+                    annualFee: 120,
+                    rewardsValue: 501.36,
+                    welcomeBonus: 260,
+                    travelValue: 0,
+                    fxValue: 0,
+                    totalValue: 761.36,
+                    netValue: 641.36,
+                    effectiveRate: 3.12
+                },
+                {
+                    name: 'TD Aeroplan® Visa Infinite*',
+                    issuer: 'TD',
+                    annualFee: 139,
+                    rewardsValue: 384.75,
+                    welcomeBonus: 325,
+                    travelValue: 65.25,
+                    fxValue: 0,
+                    totalValue: 775.00,
+                    netValue: 636.00,
+                    effectiveRate: 2.39
+                },
+                {
+                    name: 'RBC Avion® Visa Infinite',
+                    issuer: 'RBC',
+                    annualFee: 120,
+                    rewardsValue: 368.64,
+                    welcomeBonus: 250,
+                    travelValue: 75.50,
+                    fxValue: 0,
+                    totalValue: 694.14,
+                    netValue: 574.14,
+                    effectiveRate: 2.29
+                },
+                {
+                    name: 'Tangerine Money-Back Credit Card',
+                    issuer: 'Tangerine',
+                    annualFee: 0,
+                    rewardsValue: 420.00,
+                    welcomeBonus: 100,
+                    travelValue: 0,
+                    fxValue: 0,
+                    totalValue: 520.00,
+                    netValue: 520.00,
+                    effectiveRate: 2.60
+                }
+            ];
+        }
     </script>
 
     <!-- Add some CSS specific to this page -->
     <style>
         /* These styles will add to or override your main CSS */
+        .cyber-subtitle {
+            color: #00ffff;
+            font-size: 1.5rem;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #00ffff;
+            opacity: 0.8;
+        }
+        
         .plot-box {
             width: 100%;
             height: 400px;
@@ -280,6 +516,149 @@ optimal_cards <span class="keyword">AS</span> (
         
         .glitch-effect {
             animation: glitch 0.3s linear;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .spending-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .preference-toggles {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        
+        .input-group input[type="number"],
+        .input-group select {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ffff;
+            color: #fff;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .input-group input[type="range"] {
+            width: 100%;
+            background: rgba(0, 0, 255, 0.2);
+            height: 5px;
+            -webkit-appearance: none;
+            margin-top: 10px;
+        }
+        
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff;
+        }
+        
+        .input-group output {
+            display: block;
+            margin-top: 5px;
+            color: #33ff99;
+            font-size: 0.9rem;
+        }
+        
+        /* Checkbox styling */
+        .preference-toggles input[type="checkbox"] {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ffff;
+            display: inline-block;
+            position: relative;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .preference-toggles input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #33ff99;
+            top: 3px;
+            left: 3px;
+            box-shadow: 0 0 5px #33ff99;
+        }
+        
+        .preference-toggles label {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .interactive-panel {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 20, 0.7);
+            border: 1px solid #00ffff;
+            position: relative;
+        }
+        
+        .interactive-panel::before {
+            content: '[ANALYZER:ACTIVE]';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: #000;
+            color: #00ffff;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            border: 1px solid #00ffff;
+        }
+        
+        .interactive-panel h4 {
+            margin-top: 0;
+            border-bottom: 1px solid #00ffff;
+            padding-bottom: 10px;
+            color: #33ff99;
+        }
+        
+        .advanced-controls {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed #00ffff;
+        }
+        
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        /* Animation for toggling advanced mode */
+        .interactive-panel.advanced-mode {
+            animation: panelExpand 0.5s forwards;
+        }
+        
+        @keyframes panelExpand {
+            0% { transform: scaleY(1); }
+            50% { transform: scaleY(1.03); }
+            100% { transform: scaleY(1); }
         }
         
         @keyframes glitch {
