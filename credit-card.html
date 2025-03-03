@@ -130,218 +130,6 @@
                         </div>
                     </div>
                     
-                    <div class="code-preview">
-                        <h4>Web Scraping Logic:</h4>
-                        <pre><code>
-<span class="keyword">import</span> requests
-<span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup
-<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
-<span class="keyword">import</span> time
-<span class="keyword">import</span> random
-<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine
-
-<span class="keyword">class</span> <span class="class-name">CreditCardScraper</span>:
-    <span class="keyword">def</span> <span class="function-name">__init__</span>(<span class="self">self</span>, use_proxies=<span class="boolean">False</span>, cache_timeout=86400):
-        <span class="self">self</span>.headers = {
-            <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'</span>,
-            <span class="string">'Accept-Language'</span>: <span class="string">'en-CA,en;q=0.9'</span>,
-            <span class="string">'Referer'</span>: <span class="string">'https://www.google.ca/'</span>
-        }
-        <span class="self">self</span>.proxies = <span class="self">self</span>._load_proxies() <span class="keyword">if</span> use_proxies <span class="keyword">else</span> <span class="keyword">None</span>
-        <span class="self">self</span>.cache = {}
-        <span class="self">self</span>.cache_timeout = cache_timeout
-        <span class="self">self</span>.db_engine = create_engine(<span class="string">'sqlite:///credit_cards.db'</span>)
-        <span class="self">self</span>.cards_data = []
-    
-    <span class="keyword">def</span> <span class="function-name">_load_proxies</span>(<span class="self">self</span>):
-        <span class="comment"># Load Canadian proxy list</span>
-        response = requests.get(<span class="string">'https://proxylist.ca/api/proxy?country=CA&anonymity=elite'</span>)
-        <span class="keyword">return</span> [f"{p['ip']}:{p['port']}" <span class="keyword">for</span> p <span class="keyword">in</span> response.json()[<span class="string">'data'</span>]]
-    
-    <span class="keyword">def</span> <span class="function-name">_get_proxy</span>(<span class="self">self</span>):
-        <span class="keyword">return</span> {<span class="string">'http'</span>: random.choice(<span class="self">self</span>.proxies)} <span class="keyword">if</span> <span class="self">self</span>.proxies <span class="keyword">else</span> <span class="keyword">None</span>
-    
-    <span class="keyword">def</span> <span class="function-name">_fetch_page</span>(<span class="self">self</span>, url, use_cache=<span class="boolean">True</span>):
-        <span class="comment"># Check cache first</span>
-        <span class="keyword">if</span> use_cache <span class="keyword">and</span> url <span class="keyword">in</span> <span class="self">self</span>.cache:
-            cache_time, content = <span class="self">self</span>.cache[url]
-            <span class="keyword">if</span> time.time() - cache_time < <span class="self">self</span>.cache_timeout:
-                <span class="keyword">return</span> content
-        
-        <span class="comment"># Randomize delay to avoid detection</span>
-        time.sleep(random.uniform(1.5, 3.5))
-        
-        <span class="comment"># Try up to 3 times with different proxies</span>
-        <span class="keyword">for</span> attempt <span class="keyword">in</span> range(3):
-            <span class="keyword">try</span>:
-                response = requests.get(
-                    url, 
-                    headers=<span class="self">self</span>.headers, 
-                    proxies=<span class="self">self</span>._get_proxy(),
-                    timeout=10
-                )
-                response.raise_for_status()
-                <span class="self">self</span>.cache[url] = (time.time(), response.text)
-                <span class="keyword">return</span> response.text
-            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
-                <span class="keyword">print</span>(f<span class="string">"Attempt {attempt+1} failed: {str(e)}"</span>)
-                <span class="keyword">if</span> attempt == 2:
-                    <span class="keyword">raise</span> Exception(f<span class="string">"Failed to fetch {url} after 3 attempts"</span>)
-    
-    <span class="keyword">def</span> <span class="function-name">scrape_ratehub</span>(<span class="self">self</span>, use_cache=<span class="boolean">True</span>):
-        <span class="string">"""Scrape credit cards from RateHub.ca"""</span>
-        url = <span class="string">"https://www.ratehub.ca/credit-cards/best-credit-cards"</span>
-        html = <span class="self">self</span>._fetch_page(url, use_cache)
-        soup = BeautifulSoup(html, <span class="string">'html.parser'</span>)
-        
-        cards = []
-        card_elements = soup.select(<span class="string">'.credit-card-entity'</span>)
-        
-        <span class="keyword">for</span> card <span class="keyword">in</span> card_elements:
-            card_data = {
-                <span class="string">'source'</span>: <span class="string">'RateHub'</span>,
-                <span class="string">'name'</span>: card.select_one(<span class="string">'.entity-title'</span>).text.strip(),
-                <span class="string">'issuer'</span>: <span class="self">self</span>._extract_issuer(card),
-                <span class="string">'annual_fee'</span>: <span class="self">self</span>._extract_fee(card),
-                <span class="string">'welcome_bonus'</span>: <span class="self">self</span>._extract_bonus(card),
-                <span class="string">'rewards'</span>: <span class="self">self</span>._extract_rewards(card),
-                <span class="string">'url'</span>: <span class="string">'https://www.ratehub.ca'</span> + card.select_one(<span class="string">'a.entity-link'</span>)[<span class="string">'href'</span>]
-            }
-            
-            <span class="comment"># Get detailed data if available</span>
-            <span class="keyword">if</span> <span class="string">'details'</span> <span class="keyword">in</span> card_data:
-                card_data.update(<span class="self">self</span>._get_detailed_card_data(card_data[<span class="string">'url'</span>], use_cache))
-            
-            cards.append(card_data)
-        
-        <span class="self">self</span>.cards_data.extend(cards)
-        <span class="keyword">return</span> cards
-    
-    <span class="keyword">def</span> <span class="function-name">scrape_creditcardgenius</span>(<span class="self">self</span>, use_cache=<span class="boolean">True</span>):
-        <span class="string">"""Scrape credit cards from CreditCardGenius"""</span>
-        url = <span class="string">"https://creditcardgenius.ca/best-credit-cards/canada"</span>
-        <span class="comment"># Similar implementation as above...</span>
-    
-    <span class="keyword">def</span> <span class="function-name">normalize_data</span>(<span class="self">self</span>):
-        <span class="string">"""Normalize data from different sources"""</span>
-        df = pd.DataFrame(<span class="self">self</span>.cards_data)
-        
-        <span class="comment"># Normalize welcome bonus values</span>
-        df[<span class="string">'welcome_bonus_value'</span>] = df[<span class="string">'welcome_bonus'</span>].apply(<span class="self">self</span>._parse_bonus_value)
-        
-        <span class="comment"># Normalize cashback/rewards rates</span>
-        df[<span class="string">'base_rate'</span>] = df[<span class="string">'rewards'</span>].apply(<span class="self">self</span>._parse_base_rate)
-        df[<span class="string">'grocery_rate'</span>] = df[<span class="string">'rewards'</span>].apply(
-            <span class="keyword">lambda</span> x: <span class="self">self</span>._parse_category_rate(x, [<span class="string">'grocery'</span>, <span class="string">'food'</span>, <span class="string">'groceries'</span>])
-        )
-        <span class="comment"># More rate parsing...</span>
-        
-        <span class="keyword">return</span> df
-    
-    <span class="keyword">def</span> <span class="function-name">save_to_database</span>(<span class="self">self</span>):
-        <span class="string">"""Save normalized data to SQLite database"""</span>
-        df = <span class="self">self</span>.normalize_data()
-        df.to_sql(<span class="string">'credit_cards'</span>, <span class="self">self</span>.db_engine, if_exists=<span class="string">'replace'</span>, index=<span class="boolean">False</span>)
-        <span class="keyword">print</span>(f<span class="string">"Saved {len(df)} cards to database"</span>)
-    
-    <span class="keyword">def</span> <span class="function-name">analyze_cards</span>(<span class="self">self</span>, spending_profile, preferences=<span class="keyword">None</span>):
-        <span class="string">"""Analyze cards based on spending profile"""</span>
-        <span class="keyword">if</span> <span class="keyword">not</span> <span class="self">self</span>.cards_data:
-            <span class="keyword">raise</span> ValueError(<span class="string">"No card data available. Run scraper first."</span>)
-        
-        <span class="comment"># Use SQL for advanced analysis</span>
-        query = <span class="string">"""
-            WITH card_rewards AS (
-                SELECT 
-                    name,
-                    issuer,
-                    annual_fee,
-                    welcome_bonus_value,
-                    base_rate,
-                    grocery_rate,
-                    gas_rate,
-                    dining_rate,
-                    travel_rate,
-                    CASE 
-                        WHEN grocery_rate IS NULL THEN base_rate 
-                        ELSE grocery_rate 
-                    END as effective_grocery_rate,
-                    -- Similar for other categories...
-                FROM credit_cards
-            )
-            SELECT
-                name,
-                issuer,
-                annual_fee,
-                welcome_bonus_value,
-                (? * effective_grocery_rate + 
-                 ? * effective_gas_rate +
-                 ? * effective_dining_rate +
-                 ? * effective_travel_rate +
-                 ? * base_rate) as annual_rewards,
-                welcome_bonus_value + 
-                (? * effective_grocery_rate + 
-                 ? * effective_gas_rate +
-                 ? * effective_dining_rate +
-                 ? * effective_travel_rate +
-                 ? * base_rate) - annual_fee as net_value
-            FROM card_rewards
-            ORDER BY net_value DESC
-        """</span>
-        
-        <span class="comment"># Parameters: yearly spending by category</span>
-        params = [
-            spending_profile[<span class="string">'groceries'</span>] * 12,  # Yearly grocery spending
-            spending_profile[<span class="string">'gas'</span>] * 12,        # Yearly gas spending
-            spending_profile[<span class="string">'dining'</span>] * 12,     # Yearly dining spending
-            spending_profile[<span class="string">'travel'</span>] * 12,     # Yearly travel spending
-            spending_profile[<span class="string">'other'</span>] * 12,      # Other yearly spending
-            spending_profile[<span class="string">'groceries'</span>] * 12,  # Repeat for second calculation
-            spending_profile[<span class="string">'gas'</span>] * 12,
-            spending_profile[<span class="string">'dining'</span>] * 12,
-            spending_profile[<span class="string">'travel'</span>] * 12,
-            spending_profile[<span class="string">'other'</span>] * 12
-        ]
-        
-        results = pd.read_sql(query, <span class="self">self</span>.db_engine, params=params)
-        <span class="keyword">return</span> results
-</code></pre>
-                    </div>
-                    
-                    <div class="scraper-progress" id="scraper-progress">
-                        <h4>Scraper Progress</h4>
-                        <div class="progress-bars">
-                            <div class="progress-item">
-                                <span class="progress-label">RateHub.ca</span>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-status">Pending</span>
-                            </div>
-                            <div class="progress-item">
-                                <span class="progress-label">CreditCardGenius</span>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-status">Pending</span>
-                            </div>
-                            <div class="progress-item">
-                                <span class="progress-label">GreedyRates</span>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-status">Pending</span>
-                            </div>
-                            <div class="progress-item">
-                                <span class="progress-label">Data Processing</span>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-status">Pending</span>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="visualization-container">
                         <div id="welcome-bonus-plot" class="plot-box"></div>
                         <div id="rewards-comparison-plot" class="plot-box"></div>
@@ -378,6 +166,57 @@
                             </table>
                         </div>
                     </div>
+                    
+                    <div class="interactive-panel">
+                        <h4>Card Comparison Matrix</h4>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="annual-income">Annual Income (CAD)</label>
+                                <input type="range" id="annual-income" min="30000" max="150000" step="10000" value="60000">
+                                <output for="annual-income">$60,000</output>
+                            </div>
+                            <div class="input-group">
+                                <label for="province">Province</label>
+                                <select id="province">
+                                    <option value="ON">Ontario</option>
+                                    <option value="BC">British Columbia</option>
+                                    <option value="AB">Alberta</option>
+                                    <option value="QC">Quebec</option>
+                                    <option value="MB">Manitoba</option>
+                                    <option value="NS">Nova Scotia</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Monthly Spending ($)</label>
+                                <div class="spending-inputs">
+                                    <div>
+                                        <label for="groceries">Groceries</label>
+                                        <input type="number" id="groceries" value="500" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="dining">Dining</label>
+                                        <input type="number" id="dining" value="300" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="gas">Gas</label>
+                                        <input type="number" id="gas" value="200" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="travel">Travel</label>
+                                        <input type="number" id="travel" value="150" min="0">
+                                    </div>
+                                    <div>
+                                        <label for="other">Other</label>
+                                        <input type="number" id="other" value="500" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="cyber-button" onclick="analyzeCards()">
+                            <span class="button-text">ANALYZE_CARDS</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="project-actions">
@@ -396,12 +235,11 @@
     <script>
         // Variables to track scraper state
         let isScraperRunning = false;
-        let scraperProgress = {
-            'ratehub': 0,
-            'creditcardgenius': 0,
-            'greedyrates': 0,
-            'processing': 0
-        };
+        
+        // Update slider output
+        document.getElementById('annual-income').addEventListener('input', function() {
+            document.querySelector('output[for="annual-income"]').textContent = `$${this.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        });
         
         // Toggle scraper log visibility
         function toggleScraperLog() {
@@ -429,12 +267,6 @@
             addLogEntry('[Config] Data points configured: 4 active');
             addLogEntry('[Ready] Waiting for execution...');
             
-            // Reset progress bars
-            Object.keys(scraperProgress).forEach(key => {
-                scraperProgress[key] = 0;
-            });
-            updateProgressBars();
-            
             // Hide the plots
             document.getElementById('welcome-bonus-plot').classList.remove('active');
             document.getElementById('rewards-comparison-plot').classList.remove('active');
@@ -453,31 +285,6 @@
             logContent.scrollTop = logContent.scrollHeight;
         }
         
-        // Update progress bars
-        function updateProgressBars() {
-            document.querySelector('.progress-item:nth-child(1) .progress-fill').style.width = `${scraperProgress.ratehub}%`;
-            document.querySelector('.progress-item:nth-child(2) .progress-fill').style.width = `${scraperProgress.creditcardgenius}%`;
-            document.querySelector('.progress-item:nth-child(3) .progress-fill').style.width = `${scraperProgress.greedyrates}%`;
-            document.querySelector('.progress-item:nth-child(4) .progress-fill').style.width = `${scraperProgress.processing}%`;
-            
-            // Update status text
-            updateStatusText(1, 'ratehub');
-            updateStatusText(2, 'creditcardgenius');
-            updateStatusText(3, 'greedyrates');
-            updateStatusText(4, 'processing');
-        }
-        
-        function updateStatusText(index, key) {
-            const status = document.querySelector(`.progress-item:nth-child(${index}) .progress-status`);
-            if (scraperProgress[key] === 0) {
-                status.textContent = 'Pending';
-            } else if (scraperProgress[key] < 100) {
-                status.textContent = `${scraperProgress[key]}%`;
-            } else {
-                status.textContent = 'Complete';
-            }
-        }
-        
         // Run the scraper simulation
         function runScraper() {
             if (isScraperRunning) {
@@ -486,7 +293,6 @@
             }
             
             isScraperRunning = true;
-            document.getElementById('scraper-progress').classList.add('visible');
             document.querySelector('.status-indicator').classList.add('running');
             document.querySelector('.status-text').textContent = 'SCRAPER RUNNING';
             
@@ -495,12 +301,6 @@
             
             // Clear existing log
             clearLog();
-            
-            // Reset progress
-            Object.keys(scraperProgress).forEach(key => {
-                scraperProgress[key] = 0;
-            });
-            updateProgressBars();
             
             // Get configuration options
             const useCache = document.getElementById('use-cache').checked;
@@ -517,84 +317,32 @@
             addLogEntry(`[Config] Cache ${useCache ? 'enabled' : 'disabled'}`);
             addLogEntry(`[Config] Sources: ${sources.join(', ')}`);
             
-            // Simulate RateHub scraping
-            if (document.getElementById('source-ratehub').checked) {
-                simulateScraping('ratehub', 'RateHub.ca');
-            } else {
-                scraperProgress.ratehub = 100;
-                updateProgressBars();
-            }
-            
-            // Simulate CreditCardGenius scraping after delay
-            if (document.getElementById('source-creditcardgenius').checked) {
+            // Simulate data extraction
+            sources.forEach((source, index) => {
                 setTimeout(() => {
-                    simulateScraping('creditcardgenius', 'CreditCardGenius');
-                }, 1500);
-            } else {
-                scraperProgress.creditcardgenius = 100;
-                updateProgressBars();
-            }
-            
-            // Simulate GreedyRates scraping after delay
-            if (document.getElementById('source-greedyrates').checked) {
-                setTimeout(() => {
-                    simulateScraping('greedyrates', 'GreedyRates');
-                }, 3000);
-            } else {
-                scraperProgress.greedyrates = 100;
-                updateProgressBars();
-            }
+                    addLogEntry(`[Scraper] Starting extraction from ${source}`);
+                    setTimeout(() => {
+                        const cardCount = Math.floor(Math.random() * 20) + 10;
+                        addLogEntry(`[Scraper] Extracted ${cardCount} cards from ${source}`);
+                    }, 1000);
+                }, index * 1500);
+            });
             
             // Final processing
             setTimeout(() => {
-                simulateProcessing();
-            }, 5000);
-            
-            // Complete the process
-            setTimeout(() => {
-                completeScrapingProcess();
-            }, 8000);
-        }
-        
-        // Simulate scraping a specific source
-        function simulateScraping(key, sourceName) {
-            addLogEntry(`[Scraper] Starting extraction from ${sourceName}`);
-            
-            let progress = 0;
-            let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Add card count to log
-                    const cardCount = Math.floor(Math.random() * 20) + 10;
-                    addLogEntry(`[Scraper] Extracted ${cardCount} cards from ${sourceName}`);
-                }
+                addLogEntry('[Processor] Normalizing scraped data');
+                addLogEntry('[Processor] Consolidating reward structures');
                 
-                scraperProgress[key] = progress;
-                updateProgressBars();
-            }, 300);
-        }
-        
-        // Simulate data processing
-        function simulateProcessing() {
-            addLogEntry('[Processor] Normalizing scraped data');
-            addLogEntry('[Processor] Consolidating reward structures');
-            
-            let progress = 0;
-            let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 20) + 10;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
+                setTimeout(() => {
                     addLogEntry('[Processor] Data normalization complete');
                     addLogEntry('[Database] Storing results in SQLite database');
-                }
-                
-                scraperProgress.processing = progress;
-                updateProgressBars();
-            }, 400);
+                    
+                    // Complete the process
+                    setTimeout(() => {
+                        completeScrapingProcess();
+                    }, 1000);
+                }, 2000);
+            }, sources.length * 1500 + 1000);
         }
         
         // Complete the scraping process
@@ -1013,7 +761,10 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Nothing needed here after removing Card Comparison Matrix
+            // Add event listeners for sliders
+            document.getElementById('annual-income').addEventListener('input', function() {
+                document.querySelector('output[for="annual-income"]').textContent = '$' + this.value;
+            });
         });
     </script>
     
@@ -1358,29 +1109,6 @@
             line-height: 1.3;
         }
         
-        /* Progress bars for scraper */
-        .progress-container {
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid #00ffff;
-            height: 8px;
-            width: 100%;
-            margin: 10px 0;
-            position: relative;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(to right, #00ffff, #33ff99);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .progress-label {
-            font-size: 0.8rem;
-            color: #00ffff;
-            margin-bottom: 3px;
-        }
-        
         /* Feature list styles */
         .feature-list {
             margin-bottom: 20px;
@@ -1538,57 +1266,6 @@
             50% { opacity: 0.9; transform: translateX(5px); }
             75% { opacity: 0.8; transform: translateX(-2px); }
             100% { opacity: 1; transform: translateX(0); }
-        }
-        
-        /* Code preview styles */
-        .code-preview {
-            margin-top: 25px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #00ffff;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-            overflow-x: auto;
-        }
-        
-        .code-preview pre {
-            margin: 0;
-        }
-        
-        .code-preview code {
-            font-family: 'Ubuntu Mono', monospace;
-            line-height: 1.5;
-        }
-        
-        .code-preview .keyword {
-            color: #ff3366;
-            font-weight: bold;
-        }
-        
-        .code-preview .string {
-            color: #33ff99;
-        }
-        
-        .code-preview .comment {
-            color: #0099cc;
-            font-style: italic;
-        }
-        
-        .code-preview .function-name {
-            color: #ffcc00;
-        }
-        
-        .code-preview .self {
-            color: #cc99ff;
-        }
-        
-        .code-preview .class-name {
-            color: #33ffcc;
-            font-weight: bold;
-        }
-        
-        .code-preview .boolean {
-            color: #ff9966;
         }
         
         /* Global styles */
