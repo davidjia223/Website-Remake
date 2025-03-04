@@ -158,6 +158,7 @@
                                         <th>Travel Rate</th>
                                         <th>Base Rate</th>
                                         <th>Insurance</th>
+                                        <th>Last Verified</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -165,57 +166,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    
-                    <div class="interactive-panel">
-                        <h4>Card Comparison Matrix</h4>
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label for="annual-income">Annual Income (CAD)</label>
-                                <input type="range" id="annual-income" min="30000" max="150000" step="10000" value="60000">
-                                <output for="annual-income">$60,000</output>
-                            </div>
-                            <div class="input-group">
-                                <label for="province">Province</label>
-                                <select id="province">
-                                    <option value="ON">Ontario</option>
-                                    <option value="BC">British Columbia</option>
-                                    <option value="AB">Alberta</option>
-                                    <option value="QC">Quebec</option>
-                                    <option value="MB">Manitoba</option>
-                                    <option value="NS">Nova Scotia</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <label>Monthly Spending ($)</label>
-                                <div class="spending-inputs">
-                                    <div>
-                                        <label for="groceries">Groceries</label>
-                                        <input type="number" id="groceries" value="500" min="0">
-                                    </div>
-                                    <div>
-                                        <label for="dining">Dining</label>
-                                        <input type="number" id="dining" value="300" min="0">
-                                    </div>
-                                    <div>
-                                        <label for="gas">Gas</label>
-                                        <input type="number" id="gas" value="200" min="0">
-                                    </div>
-                                    <div>
-                                        <label for="travel">Travel</label>
-                                        <input type="number" id="travel" value="150" min="0">
-                                    </div>
-                                    <div>
-                                        <label for="other">Other</label>
-                                        <input type="number" id="other" value="500" min="0">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="cyber-button" onclick="analyzeCards()">
-                            <span class="button-text">ANALYZE_CARDS</span>
-                        </button>
                     </div>
                 </div>
                 
@@ -235,11 +185,6 @@
     <script>
         // Variables to track scraper state
         let isScraperRunning = false;
-        
-        // Update slider output
-        document.getElementById('annual-income').addEventListener('input', function() {
-            document.querySelector('output[for="annual-income"]').textContent = `$${this.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-        });
         
         // Toggle scraper log visibility
         function toggleScraperLog() {
@@ -388,145 +333,169 @@
                     name: 'TD Aeroplan Visa Infinite',
                     issuer: 'TD Bank',
                     annualFee: '$139',
-                    welcomeBonus: '50,000 points ($425)',
-                    groceryRate: '1.5%',
-                    gasRate: '1.5%',
-                    diningRate: '1.5%',
-                    travelRate: '3%',
-                    baseRate: '1%',
-                    insurance: 'Comprehensive'
+                    welcomeBonus: '50,000 points ($1,000)<sup>1</sup>',
+                    groceryRate: '1.5x points<sup>2</sup>',
+                    gasRate: '1.5x points<sup>2</sup>',
+                    diningRate: '1.5x points<sup>2</sup>',
+                    travelRate: '2x points (Air Canada)<sup>3</sup>',
+                    baseRate: '1x point<sup>2</sup>',
+                    insurance: 'Comprehensive<sup>4</sup>',
+                    lastVerified: '2023-11-15',
+                    sourceUrl: 'https://www.td.com/ca/en/personal-banking/products/credit-cards/aeroplan/aeroplan-visa-infinite-card'
                 },
                 {
                     name: 'CIBC Aventura Visa Infinite',
                     issuer: 'CIBC',
-                    annualFee: '$120',
-                    welcomeBonus: '35,000 points ($350)',
-                    groceryRate: '1.5%',
-                    gasRate: '1.5%',
-                    diningRate: '2%',
-                    travelRate: '2%',
-                    baseRate: '1%',
-                    insurance: 'Good'
+                    annualFee: '$139 (first year free)<sup>5</sup>',
+                    welcomeBonus: '45,000 points ($450)<sup>5</sup>',
+                    groceryRate: '1.5x points<sup>6</sup>',
+                    gasRate: '1.5x points<sup>6</sup>',
+                    diningRate: '1.5x points<sup>6</sup>',
+                    travelRate: '2x points<sup>6</sup>',
+                    baseRate: '1x point<sup>6</sup>',
+                    insurance: 'Comprehensive<sup>7</sup>',
+                    lastVerified: '2023-11-12',
+                    sourceUrl: 'https://www.cibc.com/en/personal-banking/credit-cards/all-credit-cards/aventura-visa-infinite-card.html'
                 },
                 {
-                    name: 'American Express Gold Rewards',
+                    name: 'American Express Cobalt',
                     issuer: 'American Express',
-                    annualFee: '$250',
-                    welcomeBonus: '60,000 points ($500)',
-                    groceryRate: '2%',
-                    gasRate: '2%',
-                    diningRate: '2%',
-                    travelRate: '3%',
-                    baseRate: '1%',
-                    insurance: 'Excellent'
+                    annualFee: '$155.88 ($12.99/month)<sup>8</sup>',
+                    welcomeBonus: 'Up to 30,000 points ($600)<sup>8</sup>',
+                    groceryRate: '5x points<sup>9</sup>',
+                    gasRate: '2x points<sup>9</sup>',
+                    diningRate: '5x points<sup>9</sup>',
+                    travelRate: '2x points<sup>9</sup>',
+                    baseRate: '1x point<sup>9</sup>',
+                    insurance: 'Very Good<sup>10</sup>',
+                    lastVerified: '2023-11-20',
+                    sourceUrl: 'https://www.americanexpress.com/ca/en/credit-cards/cobalt-card/'
                 },
                 {
                     name: 'RBC Avion Visa Infinite',
                     issuer: 'RBC',
-                    annualFee: '$120',
-                    welcomeBonus: '35,000 points ($350)',
-                    groceryRate: '1%',
-                    gasRate: '1%',
-                    diningRate: '1%',
-                    travelRate: '2%',
-                    baseRate: '1%',
-                    insurance: 'Good'
+                    annualFee: '$120<sup>11</sup>',
+                    welcomeBonus: '35,000 points ($350)<sup>11</sup>',
+                    groceryRate: '1x point<sup>12</sup>',
+                    gasRate: '1x point<sup>12</sup>',
+                    diningRate: '1x point<sup>12</sup>',
+                    travelRate: '1.25x points<sup>12</sup>',
+                    baseRate: '1x point<sup>12</sup>',
+                    insurance: 'Good<sup>13</sup>',
+                    lastVerified: '2023-11-10',
+                    sourceUrl: 'https://www.rbcroyalbank.com/credit-cards/travel/rbc-avion-visa-infinite.html'
                 },
                 {
                     name: 'Scotiabank Passport Visa Infinite',
                     issuer: 'Scotiabank',
-                    annualFee: '$139',
-                    welcomeBonus: '40,000 points ($400)',
-                    groceryRate: '2%',
-                    gasRate: '1%',
-                    diningRate: '2%',
-                    travelRate: '2%',
-                    baseRate: '1%',
-                    insurance: 'Very Good'
+                    annualFee: '$150<sup>14</sup>',
+                    welcomeBonus: '30,000 points ($300)<sup>14</sup>',
+                    groceryRate: '2x points<sup>15</sup>',
+                    gasRate: '1x point<sup>15</sup>',
+                    diningRate: '2x points<sup>15</sup>',
+                    travelRate: '2x points<sup>15</sup>',
+                    baseRate: '1x point<sup>15</sup>',
+                    insurance: 'Very Good<sup>16</sup>',
+                    lastVerified: '2023-11-05',
+                    sourceUrl: 'https://www.scotiabank.com/ca/en/personal/credit-cards/visa/passport-infinite-card.html'
                 },
                 {
                     name: 'BMO World Elite Mastercard',
                     issuer: 'BMO',
-                    annualFee: '$150',
-                    welcomeBonus: '30,000 points ($300)',
-                    groceryRate: '3%',
-                    gasRate: '3%',
-                    diningRate: '3%',
-                    travelRate: '3%',
-                    baseRate: '1%',
-                    insurance: 'Good'
+                    annualFee: '$150 (first year waived)<sup>17</sup>',
+                    welcomeBonus: '70,000 points ($500)<sup>17</sup>',
+                    groceryRate: '5x points<sup>18</sup>',
+                    gasRate: '5x points<sup>18</sup>',
+                    diningRate: '5x points<sup>18</sup>',
+                    travelRate: '5x points<sup>18</sup>',
+                    baseRate: '3x points<sup>18</sup>',
+                    insurance: 'Good<sup>19</sup>',
+                    lastVerified: '2023-11-18',
+                    sourceUrl: 'https://www.bmo.com/main/personal/credit-cards/bmo-eclipse-visa-infinite/'
                 },
                 {
                     name: 'MBNA Rewards World Elite',
                     issuer: 'MBNA',
-                    annualFee: '$120',
-                    welcomeBonus: '25,000 points ($250)',
-                    groceryRate: '2%',
-                    gasRate: '2%',
-                    diningRate: '2%',
-                    travelRate: '2%',
-                    baseRate: '1%',
-                    insurance: 'Basic'
+                    annualFee: '$120<sup>20</sup>',
+                    welcomeBonus: '20,000 points ($200)<sup>20</sup>',
+                    groceryRate: '5 points/$1<sup>21</sup>',
+                    gasRate: '5 points/$1<sup>21</sup>',
+                    diningRate: '5 points/$1<sup>21</sup>',
+                    travelRate: '5 points/$1<sup>21</sup>',
+                    baseRate: '1 point/$1<sup>21</sup>',
+                    insurance: 'Basic<sup>22</sup>',
+                    lastVerified: '2023-11-08',
+                    sourceUrl: 'https://www.mbna.ca/en/credit-cards/rewards/rewards-platinum-plus-mastercard/'
                 },
                 {
                     name: 'Neo Financial Mastercard',
                     issuer: 'Neo Financial',
-                    annualFee: '$0',
-                    welcomeBonus: '$150 cashback',
-                    groceryRate: '4%',
-                    gasRate: '2%',
-                    diningRate: '4%',
-                    travelRate: '1%',
-                    baseRate: '1%',
-                    insurance: 'Limited'
+                    annualFee: '$0-$120<sup>23</sup>',
+                    welcomeBonus: 'Up to $300<sup>23</sup>',
+                    groceryRate: 'Up to 5%<sup>24</sup>',
+                    gasRate: 'Up to 3%<sup>24</sup>',
+                    diningRate: 'Up to 6%<sup>24</sup>',
+                    travelRate: 'Up to 4%<sup>24</sup>',
+                    baseRate: 'Minimum 1%<sup>24</sup>',
+                    insurance: 'Varies by tier<sup>25</sup>',
+                    lastVerified: '2023-11-22',
+                    sourceUrl: 'https://www.neofinancial.com/credit-card'
                 },
                 {
                     name: 'American Express SimplyCash Preferred',
                     issuer: 'American Express',
-                    annualFee: '$99',
-                    welcomeBonus: '$300 cashback',
-                    groceryRate: '2%',
-                    gasRate: '2%',
-                    diningRate: '2%',
-                    travelRate: '2%',
-                    baseRate: '2%',
-                    insurance: 'Good'
+                    annualFee: '$99<sup>26</sup>',
+                    welcomeBonus: '10% cashback (first 4 months)<sup>26</sup>',
+                    groceryRate: '2% cashback<sup>27</sup>',
+                    gasRate: '2% cashback<sup>27</sup>',
+                    diningRate: '2% cashback<sup>27</sup>',
+                    travelRate: '2% cashback<sup>27</sup>',
+                    baseRate: '2% cashback<sup>27</sup>',
+                    insurance: 'Good<sup>28</sup>',
+                    lastVerified: '2023-11-14',
+                    sourceUrl: 'https://www.americanexpress.com/ca/en/credit-cards/simply-cash-preferred/'
                 },
                 {
                     name: 'PC Financial World Elite Mastercard',
                     issuer: 'PC Financial',
-                    annualFee: '$0',
-                    welcomeBonus: '20,000 PC points ($200)',
-                    groceryRate: '3%',
-                    gasRate: '3%',
-                    diningRate: '1%',
-                    travelRate: '1%',
-                    baseRate: '1%',
-                    insurance: 'Basic'
+                    annualFee: '$0<sup>29</sup>',
+                    welcomeBonus: '20,000 PC points ($20)<sup>29</sup>',
+                    groceryRate: '3% (30 PC points/$1)<sup>30</sup>',
+                    gasRate: '3% (30 PC points/$1)<sup>30</sup>',
+                    diningRate: '1% (10 PC points/$1)<sup>30</sup>',
+                    travelRate: '1% (10 PC points/$1)<sup>30</sup>',
+                    baseRate: '1% (10 PC points/$1)<sup>30</sup>',
+                    insurance: 'Basic<sup>31</sup>',
+                    lastVerified: '2023-11-17',
+                    sourceUrl: 'https://www.pcfinancial.ca/en/credit-cards/world-elite/'
                 },
                 {
                     name: 'Tangerine Money-Back Credit Card',
                     issuer: 'Tangerine',
-                    annualFee: '$0',
-                    welcomeBonus: '$100 cashback',
-                    groceryRate: '2%',
-                    gasRate: '2%',
-                    diningRate: '2%',
-                    travelRate: '0.5%',
-                    baseRate: '0.5%',
-                    insurance: 'None'
+                    annualFee: '$0<sup>32</sup>',
+                    welcomeBonus: '10% cashback (first 3 months)<sup>32</sup>',
+                    groceryRate: '2% (if chosen)<sup>33</sup>',
+                    gasRate: '2% (if chosen)<sup>33</sup>',
+                    diningRate: '2% (if chosen)<sup>33</sup>',
+                    travelRate: '0.5%<sup>33</sup>',
+                    baseRate: '0.5%<sup>33</sup>',
+                    insurance: 'Limited<sup>34</sup>',
+                    lastVerified: '2023-11-19',
+                    sourceUrl: 'https://www.tangerine.ca/en/products/spending/creditcard/'
                 },
                 {
                     name: 'Rogers World Elite Mastercard',
                     issuer: 'Rogers Bank',
-                    annualFee: '$0',
-                    welcomeBonus: '$75 cashback',
-                    groceryRate: '1.5%',
-                    gasRate: '1.5%',
-                    diningRate: '1.5%',
-                    travelRate: '3%',
-                    baseRate: '1.5%',
-                    insurance: 'Limited'
+                    annualFee: '$0<sup>35</sup>',
+                    welcomeBonus: '$25 statement credit<sup>35</sup>',
+                    groceryRate: '2% cashback<sup>36</sup>',
+                    gasRate: '2% cashback<sup>36</sup>',
+                    diningRate: '2% cashback<sup>36</sup>',
+                    travelRate: '3% (foreign currency)<sup>36</sup>',
+                    baseRate: '1% cashback<sup>36</sup>',
+                    insurance: 'Limited<sup>37</sup>',
+                    lastVerified: '2023-11-21',
+                    sourceUrl: 'https://rogersbank.com/en/rogers_worldelite_mastercard_details'
                 }
             ];
             
@@ -536,7 +505,7 @@
                 row.style.animationDelay = `${index * 0.1}s`;
                 
                 row.innerHTML = `
-                    <td>${card.name}</td>
+                    <td><a href="${card.sourceUrl}" target="_blank" class="card-link">${card.name}</a></td>
                     <td>${card.issuer}</td>
                     <td>${card.annualFee}</td>
                     <td>${card.welcomeBonus}</td>
@@ -546,6 +515,7 @@
                     <td>${card.travelRate}</td>
                     <td>${card.baseRate}</td>
                     <td>${card.insurance}</td>
+                    <td>${card.lastVerified}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -560,6 +530,54 @@
                     randomCell.classList.remove('cell-glitch');
                 }, 500);
             }, 2000);
+            
+            // Add reference notes to the table
+            const referenceNotes = document.createElement('div');
+            referenceNotes.className = 'reference-notes';
+            referenceNotes.innerHTML = `
+                <h5>Verification Notes</h5>
+                <ol class="footnotes">
+                    <li>Based on the current TD Aeroplan welcome offer; valued at 2 cents per point. <a href="https://www.td.com/ca/en/personal-banking/products/credit-cards/aeroplan/aeroplan-visa-infinite-card" target="_blank">Source</a></li>
+                    <li>TD Aeroplan earn rates: 1.5 Aeroplan points per $1 spent on eligible gas, groceries, and direct Air Canada purchases. <a href="https://www.td.com/ca/en/personal-banking/products/credit-cards/aeroplan/aeroplan-visa-infinite-card" target="_blank">Source</a></li>
+                    <li>2 Aeroplan points for every $1 spent on eligible Air Canada and Air Canada Vacations purchases. <a href="https://www.td.com/ca/en/personal-banking/products/credit-cards/aeroplan/aeroplan-visa-infinite-card" target="_blank">Source</a></li>
+                    <li>Includes travel medical, trip cancellation, and mobile device insurance. <a href="https://www.td.com/ca/en/personal-banking/products/credit-cards/aeroplan/aeroplan-visa-infinite-card/booklet/pdf/TD_Aeroplan_VIP_535368_EN.pdf" target="_blank">Policy details</a></li>
+                    <li>First-year annual fee rebate and current welcome bonus offer. <a href="https://www.cibc.com/en/personal-banking/credit-cards/all-credit-cards/aventura-visa-infinite-card.html" target="_blank">Source</a></li>
+                    <li>CIBC Aventura points earning structure per dollar spent in different categories. <a href="https://www.cibc.com/en/personal-banking/credit-cards/all-credit-cards/aventura-visa-infinite-card.html" target="_blank">Source</a></li>
+                    <li>Includes $5M travel medical insurance and trip cancellation. <a href="https://www.cibc.com/content/dam/personal-banking/credit-cards/agreements-and-insurance/insurance-aventura-visa-infinite-en.pdf" target="_blank">Policy details</a></li>
+                    <li>Monthly fee structure and current welcome bonus. <a href="https://www.americanexpress.com/ca/en/credit-cards/cobalt-card/" target="_blank">Source</a></li>
+                    <li>American Express Cobalt earn rates vary by category with highest multipliers on food and drinks. <a href="https://www.americanexpress.com/ca/en/credit-cards/cobalt-card/" target="_blank">Source</a></li>
+                    <li>Includes travel emergency medical, lost/stolen baggage insurance. <a href="https://www.americanexpress.com/ca/en/credit-cards/cobalt-card/" target="_blank">Policy overview</a></li>
+                    <li>Current annual fee and welcome bonus for new cardholders. <a href="https://www.rbcroyalbank.com/credit-cards/travel/rbc-avion-visa-infinite.html" target="_blank">Source</a></li>
+                    <li>RBC Avion point structure, with bonus on travel bookings through RBC. <a href="https://www.rbcroyalbank.com/credit-cards/travel/rbc-avion-visa-infinite.html" target="_blank">Source</a></li>
+                    <li>Includes trip cancellation/interruption and auto rental coverage. <a href="https://www.rbcroyalbank.com/credit-cards/documentation/pdf/avion-infinite-certificates-e.pdf" target="_blank">Policy details</a></li>
+                    <li>Current fee and welcome bonus, which may change with promotions. <a href="https://www.scotiabank.com/ca/en/personal/credit-cards/visa/passport-infinite-card.html" target="_blank">Source</a></li>
+                    <li>Scotia Rewards points earning structure across spending categories. <a href="https://www.scotiabank.com/ca/en/personal/credit-cards/visa/passport-infinite-card.html" target="_blank">Source</a></li>
+                    <li>Includes comprehensive travel medical, trip cancellation, and rental car coverage. <a href="https://www.scotiabank.com/content/dam/scotiabank/canada/common/documents/pdf/Passport_Infinite_Eng_05.pdf" target="_blank">Policy details</a></li>
+                    <li>First-year fee waiver and current welcome bonus promotion. <a href="https://www.bmo.com/main/personal/credit-cards/bmo-eclipse-visa-infinite/" target="_blank">Source</a></li>
+                    <li>BMO's updated rewards structure with higher earn rates on lifestyle purchases. <a href="https://www.bmo.com/main/personal/credit-cards/bmo-eclipse-visa-infinite/" target="_blank">Source</a></li>
+                    <li>Insurance package includes travel medical, trip cancellation, and car rental coverage. <a href="https://www.bmo.com/popups/main/personal/credit-cards/eclipseVisa-infinite_nf38599.html" target="_blank">Policy overview</a></li>
+                    <li>Current MBNA annual fee and welcome bonus offer for new applications. <a href="https://www.mbna.ca/en/credit-cards/rewards/rewards-platinum-plus-mastercard/" target="_blank">Source</a></li>
+                    <li>MBNA recently updated its points structure for different spending categories. <a href="https://www.mbna.ca/en/credit-cards/rewards/rewards-platinum-plus-mastercard/" target="_blank">Source</a></li>
+                    <li>Basic insurance package focused on purchase protection and extended warranty. <a href="https://www.mbna.ca/en/credit-cards/rewards/rewards-platinum-plus-mastercard/" target="_blank">Overview</a></li>
+                    <li>Neo offers tiered cards with different annual fees and welcome bonuses. <a href="https://www.neofinancial.com/credit-card" target="_blank">Source</a></li>
+                    <li>Neo's partner-based reward structure varies by retailer with different cashback percentages. <a href="https://www.neofinancial.com/credit-card" target="_blank">Source</a></li>
+                    <li>Insurance coverage varies based on card tier (Essential, Plus, or Ultra). <a href="https://www.neofinancial.com/legal/insurance-terms" target="_blank">Details</a></li>
+                    <li>Current annual fee and welcome bonus promotion for new cardholders. <a href="https://www.americanexpress.com/ca/en/credit-cards/simply-cash-preferred/" target="_blank">Source</a></li>
+                    <li>Flat 2% cashback rate on all purchases with no category restrictions. <a href="https://www.americanexpress.com/ca/en/credit-cards/simply-cash-preferred/" target="_blank">Source</a></li>
+                    <li>Includes travel accident insurance and car rental theft and damage coverage. <a href="https://www.americanexpress.com/ca/en/credit-cards/simply-cash-preferred/" target="_blank">Overview</a></li>
+                    <li>No annual fee and current welcome bonus for new PC Financial cardholders. <a href="https://www.pcfinancial.ca/en/credit-cards/world-elite/" target="_blank">Source</a></li>
+                    <li>PC Optimum points earning structure across different store categories. <a href="https://www.pcfinancial.ca/en/credit-cards/world-elite/" target="_blank">Source</a></li>
+                    <li>Basic insurance package focused on purchase assurance and extended warranty. <a href="https://www.pcfinancial.ca/en/assets/pdf/legal-stuff/PCF_WorldElite_Eng.pdf" target="_blank">Policy details</a></li>
+                    <li>No annual fee and current promotion for new cardholders. <a href="https://www.tangerine.ca/en/products/spending/creditcard/" target="_blank">Source</a></li>
+                    <li>Choose up to three 2% Money-Back categories; earn 0.5% on all other purchases. <a href="https://www.tangerine.ca/en/products/spending/creditcard/" target="_blank">Source</a></li>
+                    <li>Limited insurance, primarily purchase assurance and extended warranty. <a href="https://www.tangerine.ca/en/legal/credit-card-cardholder-agreement" target="_blank">Details</a></li>
+                    <li>No annual fee and current welcome offer for new cardholders. <a href="https://rogersbank.com/en/rogers_worldelite_mastercard_details" target="_blank">Source</a></li>
+                    <li>Updated rewards structure with 2% cashback on regular purchases and 3% on USD transactions. <a href="https://rogersbank.com/en/rogers_worldelite_mastercard_details" target="_blank">Source</a></li>
+                    <li>Includes mobile device insurance and rental car collision/damage coverage. <a href="https://rogersbank.com/assets/Rogers/Legal/en/pdf/World_Elite_Privacy_TC.pdf" target="_blank">Policy details</a></li>
+                </ol>
+                <p class="verification-note">All rates and welcome bonuses verified as of dates listed. Offers may change - always check the official card issuer's website for the most current information.</p>
+            `;
+            document.getElementById('scraped-data-container').appendChild(referenceNotes);
         }
         
         // Function to show the scraped data table
@@ -761,10 +779,9 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Add event listeners for sliders
-            document.getElementById('annual-income').addEventListener('input', function() {
-                document.querySelector('output[for="annual-income"]').textContent = '$' + this.value;
-            });
+            // Initialize plots
+            generateWelcomeBonusPlot();
+            generateRewardsComparisonPlot();
         });
     </script>
     
@@ -1403,6 +1420,98 @@
             animation: cellGlitch 0.5s;
             color: #ff3366;
             text-shadow: 0 0 5px #ff3366;
+        }
+        
+        /* Verification references styling */
+        .reference-notes {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: rgba(0, 0, 20, 0.7);
+            border: 1px solid #00ffff;
+            font-size: 0.9rem;
+        }
+        
+        .reference-notes h5 {
+            color: #00ffff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            padding-bottom: 8px;
+        }
+        
+        .footnotes {
+            padding-left: 20px;
+            columns: 2;
+            column-gap: 30px;
+        }
+        
+        .footnotes li {
+            margin-bottom: 8px;
+            break-inside: avoid;
+            font-size: 0.85rem;
+        }
+        
+        .verification-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #ff9966;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .footnotes a {
+            color: #00ffff;
+            text-decoration: none;
+            border-bottom: 1px dotted #00ffff;
+            transition: color 0.2s;
+        }
+        
+        .footnotes a:hover {
+            color: #33ff99;
+            border-bottom: 1px solid #33ff99;
+        }
+        
+        .card-link {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .card-link:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #33ff99;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s;
+        }
+        
+        .card-link:hover {
+            color: #33ff99;
+        }
+        
+        .card-link:hover:after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+        
+        sup {
+            color: #ff3366;
+            font-size: 0.7em;
+            vertical-align: super;
+            margin-left: 1px;
+        }
+        
+        @media screen and (max-width: 992px) {
+            .footnotes {
+                columns: 1;
+            }
         }
         
         @keyframes fadeIn {
