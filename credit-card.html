@@ -218,6 +218,12 @@
             
             // Hide the data table
             document.getElementById('scraped-data-container').classList.remove('visible');
+            
+            // Remove highlight classes
+            document.querySelector('.visualization-container').classList.remove('highlight-container');
+            document.querySelectorAll('.plot-box').forEach(plot => {
+                plot.classList.remove('pulse-highlight');
+            });
         }
         
         // Add entry to log
@@ -308,17 +314,72 @@
             setTimeout(() => {
                 addLogEntry('[Analysis] Analysis complete');
                 
-                // Generate sample plots based on "scraped" data
-                generateWelcomeBonusPlot();
-                generateRewardsComparisonPlot();
+                // Step 1: Make sure we have access to the data container
+                addLogEntry('[Visualization] Preparing chart area...');
                 
-                // Display the scraped data table
+                // Show the visualization container immediately and explicitly 
+                const vizContainer = document.querySelector('.visualization-container');
+                vizContainer.style.display = 'grid';
+                vizContainer.style.visibility = 'visible';
+                vizContainer.classList.add('highlight-container');
+                
+                // Access plot boxes directly
+                const welcomePlot = document.getElementById('welcome-bonus-plot');
+                const rewardsPlot = document.getElementById('rewards-comparison-plot');
+                
+                // Make sure elements are visible and ready
+                welcomePlot.style.display = 'block';
+                welcomePlot.style.opacity = '1';
+                welcomePlot.classList.add('active');
+                
+                rewardsPlot.style.display = 'block';
+                rewardsPlot.style.opacity = '1';
+                rewardsPlot.classList.add('active');
+                
+                addLogEntry('[Visualization] Rendering charts with simplified data...');
+                
+                // Display the scraped data table first (async operation)
                 populateDataTable();
                 showScrapedDataTable();
                 
-                document.querySelector('.status-indicator').classList.remove('success');
-                document.querySelector('.status-indicator').classList.add('active');
-                document.querySelector('.status-text').textContent = 'SCRAPER READY';
+                // Give plots a brief moment to initialize properly before drawing
+                setTimeout(() => {
+                    try {
+                        // Generate charts with our simplified direct approach
+                        generateWelcomeBonusPlot();
+                        
+                        // Short delay between chart generations
+                        setTimeout(() => {
+                            generateRewardsComparisonPlot();
+                            
+                            // Scroll to the charts
+                            setTimeout(() => {
+                                vizContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // Pulse animation for the charts
+                                document.querySelectorAll('.plot-box').forEach(plot => {
+                                    plot.classList.add('pulse-highlight');
+                                    setTimeout(() => {
+                                        plot.classList.remove('pulse-highlight');
+                                    }, 2000);
+                                });
+                                
+                                addLogEntry('[System] Analysis complete - Charts and data available for viewing');
+                            }, 500);
+                        }, 500);
+                    } catch (error) {
+                        console.error("Error in chart generation:", error);
+                        addLogEntry(`[Error] Chart rendering error: ${error.message}`);
+                    }
+                }, 300);
+                
+                // Reset the status indicator after everything is complete
+                setTimeout(() => {
+                    document.querySelector('.status-indicator').classList.remove('success');
+                    document.querySelector('.status-indicator').classList.add('active');
+                    document.querySelector('.status-text').textContent = 'SCRAPER READY';
+                }, 2000);
+                
             }, 1500);
         }
         
@@ -589,8 +650,42 @@
         
         // Function to toggle the data table visibility
         function toggleDataTable() {
+            console.log("Toggle data table called");
             const dataContainer = document.getElementById('scraped-data-container');
+            
+            // Toggle data table visibility
             dataContainer.classList.toggle('visible');
+            addLogEntry('[Data] Toggling data table visibility');
+            
+            // Ensure visualization container is visible
+            const vizContainer = document.querySelector('.visualization-container');
+            vizContainer.style.display = 'grid';
+            vizContainer.style.visibility = 'visible';
+            
+            // Access plot elements directly
+            const welcomePlot = document.getElementById('welcome-bonus-plot');
+            const rewardsPlot = document.getElementById('rewards-comparison-plot');
+            
+            // Re-initialize plot elements
+            welcomePlot.style.display = 'block';
+            welcomePlot.style.opacity = '1';
+            welcomePlot.classList.add('active');
+            
+            rewardsPlot.style.display = 'block';
+            rewardsPlot.style.opacity = '1';
+            rewardsPlot.classList.add('active');
+            
+            // Generate the plots after a small delay - this is important!
+            setTimeout(() => {
+                // Always force redraw charts
+                generateWelcomeBonusPlot();
+                
+                // Small delay between charts
+                setTimeout(() => {
+                    generateRewardsComparisonPlot();
+                    addLogEntry('[Data] Charts refreshed after toggling table');
+                }, 200);
+            }, 100);
         }
         
         // Function to export table data to CSV
@@ -625,163 +720,235 @@
             addLogEntry('[Export] Credit card data exported to CSV');
         }
         
-        // Generate welcome bonus plot
+        // Generate welcome bonus plot - simplified version
         function generateWelcomeBonusPlot() {
-            const welcomeData = [{
-                type: 'bar',
-                x: ['TD Aeroplan VI', 'CIBC Aventura VI', 'Amex Gold', 'RBC Avion VI', 'Scotiabank Passport VI', 
-                    'BMO World Elite', 'MBNA Rewards WE', 'Neo Card', 'SimplyCash Preferred', 'PC World Elite'],
-                y: [425, 350, 500, 350, 400, 300, 250, 150, 300, 200],
-                marker: {
-                    color: ['#ff3366', '#33ff99', '#00ccff', '#ffcc00', '#cc99ff', 
-                           '#ff9966', '#66ff66', '#ff6699', '#33ccff', '#ffff66'],
-                    line: {
-                        color: '#00ffff',
-                        width: 1.5
-                    }
-                },
-                text: ['$425', '$350', '$500', '$350', '$400', '$300', '$250', '$150', '$300', '$200'],
-                textposition: 'auto',
-                hoverinfo: 'x+text'
-            }];
+            console.log("Starting simplified welcome bonus plot generation");
             
-            const welcomeLayout = {
-                title: 'Welcome Bonus Value by Card (First Year)',
-                paper_bgcolor: 'rgba(0,0,0,0.6)',
-                plot_bgcolor: 'rgba(0,0,0,0.2)',
-                font: {
-                    family: 'Ubuntu Mono, monospace',
-                    color: '#ffffff'
-                },
-                xaxis: {
-                    title: '',
-                    tickangle: -45
-                },
-                yaxis: {
-                    title: 'Value ($)',
-                    showgrid: true,
-                    gridcolor: 'rgba(0,255,255,0.1)'
-                },
-                margin: {
-                    l: 50,
-                    r: 20,
-                    b: 120,
-                    t: 50,
-                    pad: 4
-                }
-            };
-            
-            Plotly.newPlot('welcome-bonus-plot', welcomeData, welcomeLayout);
-            document.getElementById('welcome-bonus-plot').classList.add('active');
-        }
-        
-        // Generate rewards comparison plot
-        function generateRewardsComparisonPlot() {
-            const categories = ['Groceries', 'Dining', 'Gas', 'Travel', 'Recurring', 'Other'];
-            
-            const rewardsData = [
-                {
-                    x: categories,
-                    y: [5, 2, 2, 1, 1, 1],
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'Amex Gold',
-                    line: {
-                        width: 3,
-                        color: '#ffcc00'
-                    },
-                    marker: {
-                        size: 8,
-                        symbol: 'circle'
-                    }
-                },
-                {
-                    x: categories,
-                    y: [3, 3, 3, 4, 1, 1],
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'TD Aeroplan VI',
-                    line: {
-                        width: 3,
-                        color: '#33ff99'
-                    },
-                    marker: {
-                        size: 8,
-                        symbol: 'circle'
-                    }
-                },
-                {
-                    x: categories,
-                    y: [4, 4, 2, 3, 2, 1],
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'Scotiabank Passport VI',
-                    line: {
-                        width: 3,
-                        color: '#ff3366'
-                    },
-                    marker: {
-                        size: 8,
-                        symbol: 'circle'
-                    }
-                },
-                {
-                    x: categories,
-                    y: [2, 5, 3, 2, 1, 1],
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: 'CIBC Aventura VI',
-                    line: {
-                        width: 3,
-                        color: '#00ccff'
-                    },
-                    marker: {
-                        size: 8,
-                        symbol: 'circle'
-                    }
-                }
+            // Simple fixed data for the top 5 cards
+            const topCards = [
+                { name: "BMO World Elite", value: 500, color: "#0099cc" },
+                { name: "TD Aeroplan", value: 450, color: "#33cc33" },
+                { name: "CIBC Aventura", value: 400, color: "#cc0000" },
+                { name: "Amex Cobalt", value: 350, color: "#006699" },
+                { name: "RBC Avion", value: 300, color: "#0066cc" }
             ];
             
-            const rewardsLayout = {
-                title: 'Reward Rate Comparison (%) by Category',
-                paper_bgcolor: 'rgba(0,0,0,0.6)',
-                plot_bgcolor: 'rgba(0,0,0,0.2)',
-                font: {
-                    family: 'Ubuntu Mono, monospace',
-                    color: '#ffffff'
-                },
-                xaxis: {
-                    title: 'Spending Category',
-                    showgrid: false
-                },
-                yaxis: {
-                    title: 'Reward Rate (%)',
-                    showgrid: true,
-                    gridcolor: 'rgba(0,255,255,0.1)'
-                },
-                legend: {
-                    x: 0,
-                    y: 1.1,
-                    orientation: 'h'
-                },
-                margin: {
-                    l: 50,
-                    r: 20,
-                    b: 50,
-                    t: 50,
-                    pad: 4
+            console.log("Using fixed data:", topCards);
+            addLogEntry('[Debug] Using fixed top 5 cards data for welcome bonus chart');
+            
+            try {
+                const plotElement = document.getElementById('welcome-bonus-plot');
+                
+                // Safety check for element
+                if (!plotElement) {
+                    console.error("Plot element not found");
+                    addLogEntry('[Error] Welcome bonus plot element not found');
+                    return;
                 }
+                
+                // Make sure element is visible
+                plotElement.style.opacity = '1';
+                plotElement.classList.add('active');
+                plotElement.style.display = 'block';
+                
+                // Simplest possible bar chart data
+                const welcomeData = [{
+                    type: 'bar',
+                    x: topCards.map(card => card.name),
+                    y: topCards.map(card => card.value),
+                    marker: {
+                        color: topCards.map(card => card.color)
+                    }
+                }];
+                
+                // Minimal layout
+                const welcomeLayout = {
+                    title: 'Top 5 Welcome Bonus Values',
+                    margin: { t: 50, l: 50, r: 20, b: 100 }
+                };
+                
+                console.log("Calling Plotly.newPlot");
+                
+                // Force clean any existing plots
+                Plotly.purge(plotElement);
+                
+                // Create plot
+                Plotly.newPlot(plotElement, welcomeData, welcomeLayout, {responsive: true})
+                    .then(() => {
+                        console.log("Welcome bonus plot successfully drawn");
+                        addLogEntry('[Visualization] Welcome Bonus chart rendered successfully');
+                    })
+                    .catch(err => {
+                        console.error("Error in Plotly.newPlot:", err);
+                        addLogEntry(`[Error] Plotly error: ${err.message}`);
+                    });
+                    
+            } catch (error) {
+                console.error("Exception in generateWelcomeBonusPlot:", error);
+                addLogEntry(`[Error] Chart generation failed: ${error.message}`);
+            }
+        }
+        
+        // Helper function to get consistent color by issuer (simplified)
+        function getIssuerColor(issuer) {
+            const issuerColors = {
+                'TD Bank': '#33cc33',
+                'CIBC': '#cc0000',
+                'American Express': '#006699',
+                'RBC': '#0066cc',
+                'Scotiabank': '#ff0000',
+                'BMO': '#0099cc',
+                'MBNA': '#990099',
+                'Neo Financial': '#ff3366',
+                'PC Financial': '#003399',
+                'Tangerine': '#ff9900',
+                'Rogers Bank': '#ff3300'
             };
             
-            Plotly.newPlot('rewards-comparison-plot', rewardsData, rewardsLayout);
-            document.getElementById('rewards-comparison-plot').classList.add('active');
+            return issuerColors[issuer] || '#00ffff'; // Default color if issuer not in map
+        }
+        
+        // Generate rewards comparison plot - simplified version
+        function generateRewardsComparisonPlot() {
+            console.log("Starting simplified rewards comparison plot generation");
+            
+            try {
+                const plotElement = document.getElementById('rewards-comparison-plot');
+                
+                // Safety check for element
+                if (!plotElement) {
+                    console.error("Rewards plot element not found");
+                    addLogEntry('[Error] Rewards comparison plot element not found');
+                    return;
+                }
+                
+                // Make sure element is visible
+                plotElement.style.opacity = '1';
+                plotElement.classList.add('active');
+                plotElement.style.display = 'block';
+                
+                // Simple fixed data for rewards comparison
+                const categories = ['Groceries', 'Dining', 'Gas', 'Travel', 'Base'];
+                
+                // Sample data for top 4 cards
+                const rewardsData = [
+                    {
+                        x: categories,
+                        y: [5, 5, 2, 2, 1],
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Amex Cobalt',
+                        line: {
+                            width: 3,
+                            color: '#006699'
+                        },
+                        marker: {
+                            size: 8
+                        }
+                    },
+                    {
+                        x: categories,
+                        y: [1.5, 1.5, 1.5, 2, 1],
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'TD Aeroplan',
+                        line: {
+                            width: 3,
+                            color: '#33cc33'
+                        },
+                        marker: {
+                            size: 8
+                        }
+                    },
+                    {
+                        x: categories,
+                        y: [2, 2, 2, 2, 2],
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Amex SimplyCash',
+                        line: {
+                            width: 3,
+                            color: '#ff9900'
+                        },
+                        marker: {
+                            size: 8
+                        }
+                    },
+                    {
+                        x: categories,
+                        y: [3, 1, 3, 1, 1],
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'PC World Elite',
+                        line: {
+                            width: 3,
+                            color: '#003399'
+                        },
+                        marker: {
+                            size: 8
+                        }
+                    }
+                ];
+                
+                // Minimal layout
+                const rewardsLayout = {
+                    title: 'Top Card Reward Rates by Category',
+                    margin: { t: 50, l: 50, r: 20, b: 50 },
+                    legend: {
+                        x: 0,
+                        y: 1.1,
+                        orientation: 'h'
+                    }
+                };
+                
+                console.log("Calling Plotly.newPlot for rewards chart");
+                
+                // Force clean any existing plots
+                Plotly.purge(plotElement);
+                
+                // Create plot
+                Plotly.newPlot(plotElement, rewardsData, rewardsLayout, {responsive: true})
+                    .then(() => {
+                        console.log("Rewards comparison plot successfully drawn");
+                        addLogEntry('[Visualization] Rewards Comparison chart rendered successfully');
+                    })
+                    .catch(err => {
+                        console.error("Error in Plotly.newPlot:", err);
+                        addLogEntry(`[Error] Plotly error: ${err.message}`);
+                    });
+                    
+            } catch (error) {
+                console.error("Exception in generateRewardsComparisonPlot:", error);
+                addLogEntry(`[Error] Chart generation failed: ${error.message}`);
+            }
         }
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize plots
-            generateWelcomeBonusPlot();
-            generateRewardsComparisonPlot();
+            // Make sure creditCardData is defined 
+            if (typeof creditCardData === 'undefined') {
+                // Initialize with the sample data if not yet defined
+                populateDataTable();
+            }
+            
+            // Ensure the visualization container is visible
+            const vizContainer = document.querySelector('.visualization-container');
+            vizContainer.style.display = 'grid';
+            
+            // Make sure the plot boxes are ready
+            document.querySelectorAll('.plot-box').forEach(plot => {
+                plot.classList.add('active');
+            });
+            
+            // Wait a moment before initializing plots to ensure DOM is ready
+            setTimeout(() => {
+                // Initialize plots
+                generateWelcomeBonusPlot();
+                generateRewardsComparisonPlot();
+                
+                // Add log entry
+                addLogEntry('[System] Charts initialized on page load');
+            }, 100);
         });
     </script>
     
@@ -1193,6 +1360,18 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
             margin: 25px 0;
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 5; /* Higher z-index to ensure it's visible */
+            visibility: visible !important; /* Force visibility */
+        }
+        
+        .highlight-container {
+            border: 2px solid #33ff99;
+            box-shadow: 0 0 20px rgba(51, 255, 153, 0.4);
+            padding: 15px;
+            border-radius: 4px;
+            animation: container-glow 2s ease-in-out;
         }
         
         .plot-box {
@@ -1202,10 +1381,50 @@
             background-color: rgba(0, 0, 0, 0.6);
             border: 1px solid #00ffff;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            position: relative;
         }
         
         .plot-box.active {
             opacity: 1;
+        }
+        
+        /* Remove z-index adjustments that might be affecting Plotly */
+        .js-plotly-plot, .plot-container {
+            position: relative;
+        }
+        
+        .pulse-highlight {
+            animation: plot-pulse 2s ease-in-out;
+        }
+        
+        @keyframes container-glow {
+            0% { 
+                box-shadow: 0 0 5px rgba(51, 255, 153, 0.2);
+                border-color: rgba(51, 255, 153, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(51, 255, 153, 0.8);
+                border-color: rgba(51, 255, 153, 1); 
+            }
+            100% { 
+                box-shadow: 0 0 15px rgba(51, 255, 153, 0.4);
+                border-color: rgba(51, 255, 153, 0.8);
+            }
+        }
+        
+        @keyframes plot-pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(0, 255, 255, 1);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            }
         }
         
         /* Data analysis section */
@@ -1327,11 +1546,13 @@
             overflow: hidden;
             transition: max-height 0.5s ease-in-out;
             position: relative;
+            z-index: 1; /* Default z-index */
         }
         
         .scraped-data-container.visible {
             display: block;
             max-height: 600px;
+            z-index: 2; /* Higher z-index when visible */
         }
         
         .data-table-header {
